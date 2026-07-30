@@ -1,0 +1,59 @@
+{
+  "mcpServers": {
+    "Hugging Face": {
+      "url": "https://huggingface.co/mcp",
+      "headers": {
+        "Authorization": "Bearer ${HF_TOKEN}"
+      }
+    },
+    "Shadcn": {
+      "command": "npx",
+      "args": ["shadcn@latest", "mcp"]
+    },
+    "Chrome DevTools": {
+      "command": "npx",
+      "args": ["chrome-devtools-mcp@latest"]
+    },
+    "GitHub": {
+      "url": "https://api.githubcopilot.com/mcp/",
+      "headers": {
+        "Authorization": "Bearer ${GITHUB_MCP_PAT}"
+      }
+    },
+    "Perplexity": {
+      "command": "npx",
+      "args": ["-y", "@perplexity-ai/mcp-server"],
+      "env": {
+        "PERPLEXITY_API_KEY": "${PERPLEXITY_API_KEY}",
+        "PERPLEXITY_TIMEOUT_MS": "600000"
+      }
+    },
+    "DeepWiki": {
+      "url": "https://mcp.deepwiki.com/mcp"
+    },
+    "Markitdown": {
+      "command": "uvx",
+      "args": ["markitdown-mcp"]
+    },
+    "OpenAI Docs": {
+      "url": "https://developers.openai.com/mcp"
+    },
+    "xAI Docs": {
+      "url": "https://docs.x.ai/api/mcp"
+    },
+    "alphaXiv": {
+      "url": "https://api.alphaxiv.org/mcp/v1",
+      "headers": {
+        "Authorization": "Bearer ${ALPHAXIV_API_KEY}"
+      }
+    },
+    "Remotion Documentation": {
+      "command": "npx",
+      "args": ["@remotion/mcp@latest"]
+    },
+    "Playwright": {
+      "command": "npx",
+      "args": ["@playwright/mcp@latest"]
+    }
+  }
+}
