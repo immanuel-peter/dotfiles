@@ -51,6 +51,11 @@
       "url": "https://developers.openai.com/mcp",
       "enabled": true
     },
+    "Claude Code Docs": {
+      "type": "remote",
+      "url": "https://code.claude.com/docs/mcp",
+      "enabled": true
+    },
     "xAI Docs": {
       "type": "remote",
       "url": "https://docs.x.ai/api/mcp",

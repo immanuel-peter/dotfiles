@@ -38,6 +38,9 @@
     "OpenAI Docs": {
       "url": "https://developers.openai.com/mcp"
     },
+    "Claude Code Docs": {
+      "url": "https://code.claude.com/docs/mcp"
+    },
     "xAI Docs": {
       "url": "https://docs.x.ai/api/mcp"
     },

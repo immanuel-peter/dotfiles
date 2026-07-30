@@ -29,6 +29,9 @@ args = ["markitdown-mcp"]
 [mcp_servers.openai-docs]
 url = "https://developers.openai.com/mcp"
 
+[mcp_servers.claude-code-docs]
+url = "https://code.claude.com/docs/mcp"
+
 [mcp_servers.xai-docs]
 url = "https://docs.x.ai/api/mcp"
 

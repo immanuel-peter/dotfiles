@@ -21,6 +21,7 @@ Shared MCP server configs for coding agents.
 - DeepWiki
 - Markitdown
 - OpenAI Docs
+- Claude Code Docs
 - xAI Docs
 - alphaXiv
 - Remotion
