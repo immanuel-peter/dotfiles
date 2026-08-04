@@ -1,6 +1,7 @@
 {
   "mcpServers": {
     "Hugging Face": {
+      "type": "http",
       "url": "https://huggingface.co/mcp",
       "headers": {
         "Authorization": "Bearer ${HF_TOKEN}"
@@ -15,6 +16,7 @@
       "args": ["chrome-devtools-mcp@latest"]
     },
     "GitHub": {
+      "type": "http",
       "url": "https://api.githubcopilot.com/mcp/",
       "headers": {
         "Authorization": "Bearer ${GITHUB_MCP_PAT}"
@@ -29,6 +31,7 @@
       }
     },
     "DeepWiki": {
+      "type": "http",
       "url": "https://mcp.deepwiki.com/mcp"
     },
     "Markitdown": {
@@ -36,16 +39,23 @@
       "args": ["markitdown-mcp"]
     },
     "OpenAI Docs": {
+      "type": "http",
       "url": "https://developers.openai.com/mcp"
     },
     "Claude Code Docs": {
       "type": "http",
       "url": "https://code.claude.com/docs/mcp"
     },
+    "Brev Docs": {
+      "type": "http",
+      "url": "https://docs.nvidia.com/brev/_mcp/server"
+    },
     "xAI Docs": {
+      "type": "http",
       "url": "https://docs.x.ai/api/mcp"
     },
     "alphaXiv": {
+      "type": "http",
       "url": "https://api.alphaxiv.org/mcp/v1",
       "headers": {
         "Authorization": "Bearer ${ALPHAXIV_API_KEY}"

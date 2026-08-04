@@ -32,6 +32,9 @@ url = "https://developers.openai.com/mcp"
 [mcp_servers.claude-code-docs]
 url = "https://code.claude.com/docs/mcp"
 
+[mcp_servers.brev-docs]
+url = "https://docs.nvidia.com/brev/_mcp/server"
+
 [mcp_servers.xai-docs]
 url = "https://docs.x.ai/api/mcp"
 

@@ -41,6 +41,9 @@
     "Claude Code Docs": {
       "url": "https://code.claude.com/docs/mcp"
     },
+    "Brev Docs": {
+      "url": "https://docs.nvidia.com/brev/_mcp/server"
+    },
     "xAI Docs": {
       "url": "https://docs.x.ai/api/mcp"
     },

@@ -56,6 +56,11 @@
       "url": "https://code.claude.com/docs/mcp",
       "enabled": true
     },
+    "Brev Docs": {
+      "type": "remote",
+      "url": "https://docs.nvidia.com/brev/_mcp/server",
+      "enabled": true
+    },
     "xAI Docs": {
       "type": "remote",
       "url": "https://docs.x.ai/api/mcp",

@@ -15,6 +15,7 @@ This repo holds personal dotfiles.
 - Markitdown
 - OpenAI Docs
 - Claude Code Docs
+- Brev Docs
 - xAI Docs
 - alphaXiv
 - Remotion
