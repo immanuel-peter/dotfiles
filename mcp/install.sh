@@ -7,7 +7,17 @@
 # - OpenCode:    copy opencode.mcp.json -> ~/.config/opencode/opencode.jsonc
 #
 # Also reports which MCP-related env vars are missing on this machine.
+# If agent-browser is missing and npm is available, installs the CLI globally.
+#
+# Works from a clone or via:
+#   curl -fsSL https://raw.githubusercontent.com/immanuel-peter/dotfiles/main/mcp/install.sh | bash
+#
+# Override the GitHub source with DOTFILES_REPO / DOTFILES_REF if needed.
 set -euo pipefail
+
+DOTFILES_REPO="${DOTFILES_REPO:-immanuel-peter/dotfiles}"
+DOTFILES_REF="${DOTFILES_REF:-main}"
+RAW_BASE="https://raw.githubusercontent.com/${DOTFILES_REPO}/${DOTFILES_REF}/mcp"
 
 # ---------------------------------------------------------------------------
 # Env vars required by certain MCP servers (set these before opening a client)
@@ -20,11 +30,12 @@ REQUIRED_ENV_VARS=(
   "ALPHAXIV_API_KEY:alphaXiv"
 )
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-SRC_CLAUDE_JSON="${SCRIPT_DIR}/claude.mcp.json"
-SRC_CURSOR_JSON="${SCRIPT_DIR}/cursor.mcp.json"
-SRC_MCP_TOML="${SCRIPT_DIR}/mcp.toml"
-SRC_OPENCODE="${SCRIPT_DIR}/opencode.mcp.json"
+SCRIPT_DIR=""
+SOURCE_KIND=""
+SRC_CLAUDE_JSON=""
+SRC_CURSOR_JSON=""
+SRC_MCP_TOML=""
+SRC_OPENCODE=""
 
 CLAUDE_JSON="${HOME}/.claude.json"
 CURSOR_MCP="${HOME}/.cursor/mcp.json"
@@ -69,6 +80,121 @@ backup_file() {
 
 ensure_parent_dir() {
   mkdir -p "$(dirname "$1")"
+}
+
+download() {
+  local url="$1"
+  local dest="$2"
+  if command -v curl >/dev/null 2>&1; then
+    curl -fsSL "$url" -o "$dest"
+  elif command -v wget >/dev/null 2>&1; then
+    wget -qO "$dest" "$url"
+  else
+    die "Need curl or wget to fetch ${url}"
+  fi
+}
+
+# Prefer configs next to this script (a clone). Otherwise fetch them from GitHub
+# so `curl …/mcp/install.sh | bash` works on a machine with no checkout.
+resolve_sources() {
+  local src="${BASH_SOURCE[0]:-}"
+  local dir=""
+  if [[ -n "$src" && -f "$src" ]]; then
+    dir="$(cd "$(dirname "$src")" && pwd)"
+  fi
+
+  if [[ -n "$dir" \
+    && -f "$dir/claude.mcp.json" \
+    && -f "$dir/cursor.mcp.json" \
+    && -f "$dir/mcp.toml" \
+    && -f "$dir/opencode.mcp.json" ]]; then
+    SCRIPT_DIR="$dir"
+    SOURCE_KIND="checkout"
+  else
+    SCRIPT_DIR="$(mktemp -d "${TMPDIR:-/tmp}/mcp-dotfiles.XXXXXX")"
+    SOURCE_KIND="remote"
+    info "No local checkout — fetching MCP configs from ${DOTFILES_REPO}@${DOTFILES_REF}"
+    download "${RAW_BASE}/claude.mcp.json" "${SCRIPT_DIR}/claude.mcp.json"
+    download "${RAW_BASE}/cursor.mcp.json" "${SCRIPT_DIR}/cursor.mcp.json"
+    download "${RAW_BASE}/mcp.toml" "${SCRIPT_DIR}/mcp.toml"
+    download "${RAW_BASE}/opencode.mcp.json" "${SCRIPT_DIR}/opencode.mcp.json"
+    ok "Fetched 4 config file(s) into ${SCRIPT_DIR}"
+  fi
+
+  SRC_CLAUDE_JSON="${SCRIPT_DIR}/claude.mcp.json"
+  SRC_CURSOR_JSON="${SCRIPT_DIR}/cursor.mcp.json"
+  SRC_MCP_TOML="${SCRIPT_DIR}/mcp.toml"
+  SRC_OPENCODE="${SCRIPT_DIR}/opencode.mcp.json"
+}
+
+# Use an existing nvm so npm/agent-browser resolve in this non-interactive bash
+# script. Does not install nvm or a Node version.
+load_nvm() {
+  local candidates=(
+    "${NVM_DIR:-$HOME/.nvm}/nvm.sh"
+    "${HOME}/.nvm/nvm.sh"
+    "/opt/homebrew/opt/nvm/nvm.sh"
+    "/usr/local/opt/nvm/nvm.sh"
+  )
+  local nvm_sh
+  for nvm_sh in "${candidates[@]}"; do
+    if [[ -s "$nvm_sh" ]]; then
+      export NVM_DIR
+      NVM_DIR="$(cd "$(dirname "$nvm_sh")" && pwd)"
+      set +u
+      # shellcheck disable=SC1090
+      . "$nvm_sh"
+      set -u
+      return 0
+    fi
+  done
+}
+
+# Linux needs shared libraries; --with-deps installs them (no-op / unused on macOS).
+agent_browser_install_chrome() {
+  if [[ "$(uname -s)" == Linux ]]; then
+    info "Installing browser binaries + Linux system deps"
+    agent-browser install --with-deps
+  else
+    info "Downloading Chrome for Testing (agent-browser install)"
+    agent-browser install
+  fi
+}
+
+# agent-browser is a global CLI (not npx/uvx). Install it if missing, then
+# download Chrome for Testing. On Linux, also install system deps.
+ensure_agent_browser() {
+  info "Checking agent-browser CLI"
+  load_nvm
+
+  local fresh=0
+  if command -v agent-browser >/dev/null 2>&1; then
+    ok "agent-browser $(agent-browser --version 2>/dev/null | awk '{print $NF}')"
+  else
+    if ! command -v npm >/dev/null 2>&1; then
+      warn "agent-browser not on PATH and npm is missing"
+      warn "Install Node first: curl -fsSL https://raw.githubusercontent.com/${DOTFILES_REPO}/${DOTFILES_REF}/install-node.sh | bash"
+      return 0
+    fi
+
+    info "Installing agent-browser via npm -g"
+    if npm install -g agent-browser; then
+      ok "Installed $(command -v agent-browser)"
+      fresh=1
+    else
+      warn "npm install -g agent-browser failed; Agent Browser MCP will not start"
+      return 0
+    fi
+  fi
+
+  # First install always; Linux also needs --with-deps even if the CLI was already present.
+  if ((fresh)) || [[ "$(uname -s)" == Linux ]]; then
+    if agent_browser_install_chrome; then
+      ok "Browser binaries ready"
+    else
+      warn "agent-browser install failed; run it manually before using Agent Browser"
+    fi
+  fi
 }
 
 # ---------------------------------------------------------------------------
@@ -261,7 +387,12 @@ install_opencode() {
 # ---------------------------------------------------------------------------
 main() {
   printf '%s\n' "${C_BOLD}MCP dotfiles installer${C_RESET}"
-  printf '%s\n\n' "${C_DIM}source: ${SCRIPT_DIR}${C_RESET}"
+  resolve_sources
+  if [[ "$SOURCE_KIND" == remote ]]; then
+    printf '%s\n\n' "${C_DIM}source: ${DOTFILES_REPO}@${DOTFILES_REF}${C_RESET}"
+  else
+    printf '%s\n\n' "${C_DIM}source: ${SCRIPT_DIR}${C_RESET}"
+  fi
 
   [[ -f "$SRC_CLAUDE_JSON" ]] || die "Missing ${SRC_CLAUDE_JSON}"
   [[ -f "$SRC_CURSOR_JSON" ]] || die "Missing ${SRC_CURSOR_JSON}"
@@ -269,6 +400,8 @@ main() {
   [[ -f "$SRC_OPENCODE" ]] || die "Missing ${SRC_OPENCODE}"
 
   check_env_vars
+  echo
+  ensure_agent_browser
   echo
 
   install_claude

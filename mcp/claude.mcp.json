@@ -68,6 +68,10 @@
     "Playwright": {
       "command": "npx",
       "args": ["@playwright/mcp@latest"]
+    },
+    "Agent Browser": {
+      "command": "agent-browser",
+      "args": ["mcp"]
     }
   }
 }

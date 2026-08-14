@@ -1,6 +1,27 @@
 # Dotfiles
 
-This repo holds personal dotfiles.
+Configs to bootstrap a remote machine for coding agents.
+
+On a fresh box, no clone needed:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/immanuel-peter/dotfiles/main/install-node.sh | bash
+curl -fsSL https://raw.githubusercontent.com/immanuel-peter/dotfiles/main/mcp/install.sh | bash
+```
+
+Or from a checkout:
+
+```bash
+git clone https://github.com/immanuel-peter/dotfiles ~/dotfiles
+cd ~/dotfiles
+chmod +x install-node.sh mcp/install.sh
+./install-node.sh      # nvm + Node LTS (skip if nvm/Node already installed)
+./mcp/install.sh       # MCP server configs
+```
+
+## Node — `install-node.sh`
+
+Installs [nvm](https://github.com/nvm-sh/nvm) into `~/.nvm` if it is missing, then `nvm install --lts` and sets that as the default. Uses an existing nvm when already present.
 
 ## MCP - `mcp/`
 
@@ -20,6 +41,7 @@ This repo holds personal dotfiles.
 - alphaXiv
 - Remotion
 - Playwright
+- Agent Browser
 
 ### MCP Clients
 
@@ -28,3 +50,4 @@ This repo holds personal dotfiles.
 - OpenAI Codex
 - OpenCode
 - Grok Build
+- Muse Code

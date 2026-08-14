@@ -83,6 +83,11 @@
       "type": "local",
       "command": ["npx", "@playwright/mcp@latest"],
       "enabled": true
+    },
+    "Agent Browser": {
+      "type": "local",
+      "command": ["agent-browser", "mcp"],
+      "enabled": true
     }
   }
 }
