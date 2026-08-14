@@ -28,6 +28,7 @@ Shared MCP server configs for coding agents.
 - Remotion
 - Playwright
 - Agent Browser
+- OpenRouter
 
 ## Environment variables
 

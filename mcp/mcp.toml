@@ -53,3 +53,6 @@ args = ["@playwright/mcp@latest"]
 [mcp_servers.agent-browser]
 command = "agent-browser"
 args = ["mcp"]
+
+[mcp_servers.openrouter]
+url = "https://mcp.openrouter.ai/mcp"

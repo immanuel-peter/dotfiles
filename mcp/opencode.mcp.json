@@ -88,6 +88,11 @@
       "type": "local",
       "command": ["agent-browser", "mcp"],
       "enabled": true
+    },
+    "OpenRouter": {
+      "type": "remote",
+      "url": "https://mcp.openrouter.ai/mcp",
+      "enabled": true
     }
   }
 }
