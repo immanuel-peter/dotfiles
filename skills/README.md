@@ -1,0 +1,40 @@
+# Skills
+
+Shared agent skills. Installed into `~/.agents/skills` (the copy other clients read) and symlinked into `~/.claude/skills` for Claude Code.
+
+## Skills
+
+- [frontend-design](./frontend-design/SKILL.md) — distinctive production-grade frontend interfaces
+- [html-communication](./html-communication/SKILL.md) — self-contained HTML drafts, published to PostPlan
+- [unslop](./unslop/SKILL.md) — cut AI tells from writing
+
+## Environment variables
+
+| Variable | Skill |
+| --- | --- |
+| `POSTPLAN_TOKEN` | html-communication |
+
+## Installation
+
+No clone needed:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/immanuel-peter/dotfiles/main/skills/install.sh | bash
+```
+
+Or from a checkout:
+
+```bash
+git clone https://github.com/immanuel-peter/dotfiles ~/dotfiles
+cd ~/dotfiles
+chmod +x skills/install.sh
+./skills/install.sh
+```
+
+What the installer does:
+
+1. Copies each skill directory into `~/.agents/skills/<name>/`
+2. Symlinks `~/.claude/skills/<name>` → `../../.agents/skills/<name>`
+3. Reports whether `POSTPLAN_TOKEN` is set
+
+Existing files under `~/.agents/skills/<name>/` are replaced. Other skills already on the machine are left alone.

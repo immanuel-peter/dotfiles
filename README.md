@@ -7,6 +7,7 @@ On a fresh box, no clone needed:
 ```bash
 curl -fsSL https://raw.githubusercontent.com/immanuel-peter/dotfiles/main/install-node.sh | bash
 curl -fsSL https://raw.githubusercontent.com/immanuel-peter/dotfiles/main/mcp/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/immanuel-peter/dotfiles/main/skills/install.sh | bash
 ```
 
 Or from a checkout:
@@ -14,9 +15,10 @@ Or from a checkout:
 ```bash
 git clone https://github.com/immanuel-peter/dotfiles ~/dotfiles
 cd ~/dotfiles
-chmod +x install-node.sh mcp/install.sh
+chmod +x install-node.sh mcp/install.sh skills/install.sh
 ./install-node.sh      # nvm + Node LTS (skip if nvm/Node already installed)
 ./mcp/install.sh       # MCP server configs
+./skills/install.sh    # agent skills (~/.agents/skills + Claude symlinks)
 ```
 
 ## Node — `install-node.sh`
@@ -51,3 +53,11 @@ Installs [nvm](https://github.com/nvm-sh/nvm) into `~/.nvm` if it is missing, th
 - OpenCode
 - Grok Build
 - Muse Code
+
+## Skills — `skills/`
+
+Installed into `~/.agents/skills` and symlinked into `~/.claude/skills`.
+
+- frontend-design
+- html-communication
+- unslop
