@@ -4,6 +4,7 @@ Shared agent skills. Installed into `~/.agents/skills` (the copy other clients r
 
 ## Skills
 
+- [asset-upload](./asset-upload/SKILL.md) — upload a file to PostPlan, get a public URL
 - [bro](./bro/SKILL.md) — restate the last message in plain language, no jargon
 - [frontend-design](./frontend-design/SKILL.md) — distinctive production-grade frontend interfaces
 - [html-communication](./html-communication/SKILL.md) — self-contained HTML drafts, published to PostPlan
@@ -14,7 +15,7 @@ Shared agent skills. Installed into `~/.agents/skills` (the copy other clients r
 
 | Variable | Skill |
 | --- | --- |
-| `POSTPLAN_TOKEN` | html-communication |
+| `POSTPLAN_TOKEN` | asset-upload, html-communication |
 
 ## Installation
 

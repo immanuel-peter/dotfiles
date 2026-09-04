@@ -13,6 +13,7 @@ RAW_BASE="https://raw.githubusercontent.com/${DOTFILES_REPO}/${DOTFILES_REF}/ski
 ARCHIVE_URL="https://github.com/${DOTFILES_REPO}/archive/${DOTFILES_REF}.tar.gz"
 
 SKILLS=(
+  asset-upload
   bro
   frontend-design
   html-communication
@@ -151,10 +152,10 @@ install_skill() {
 check_postplan_token() {
   info "Checking skill-related environment variables"
   if [[ -n "${POSTPLAN_TOKEN:-}" ]]; then
-    ok "set: POSTPLAN_TOKEN (html-communication)"
+    ok "set: POSTPLAN_TOKEN (asset-upload, html-communication)"
   else
-    warn "missing: POSTPLAN_TOKEN (html-communication)"
-    printf '%s\n' "${C_DIM}html-communication will refuse to publish until this is set, e.g.:${C_RESET}"
+    warn "missing: POSTPLAN_TOKEN (asset-upload, html-communication)"
+    printf '%s\n' "${C_DIM}asset-upload and html-communication will refuse until this is set, e.g.:${C_RESET}"
     printf '  export POSTPLAN_TOKEN="…"\n'
   fi
 }
