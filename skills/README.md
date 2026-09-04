@@ -4,9 +4,11 @@ Shared agent skills. Installed into `~/.agents/skills` (the copy other clients r
 
 ## Skills
 
+- [bro](./bro/SKILL.md) — restate the last message in plain language, no jargon
 - [frontend-design](./frontend-design/SKILL.md) — distinctive production-grade frontend interfaces
 - [html-communication](./html-communication/SKILL.md) — self-contained HTML drafts, published to PostPlan
 - [unslop](./unslop/SKILL.md) — cut AI tells from writing
+- [wait-what](./wait-what/SKILL.md) — re-pitch the last message with the missing context, in plain English
 
 ## Environment variables
 

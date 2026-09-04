@@ -13,9 +13,11 @@ RAW_BASE="https://raw.githubusercontent.com/${DOTFILES_REPO}/${DOTFILES_REF}/ski
 ARCHIVE_URL="https://github.com/${DOTFILES_REPO}/archive/${DOTFILES_REF}.tar.gz"
 
 SKILLS=(
+  bro
   frontend-design
   html-communication
   unslop
+  wait-what
 )
 
 AGENTS_SKILLS="${HOME}/.agents/skills"

@@ -58,6 +58,8 @@ Installs [nvm](https://github.com/nvm-sh/nvm) into `~/.nvm` if it is missing, th
 
 Installed into `~/.agents/skills` and symlinked into `~/.claude/skills`.
 
+- bro
 - frontend-design
 - html-communication
 - unslop
+- wait-what
