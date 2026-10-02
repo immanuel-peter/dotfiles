@@ -2,7 +2,10 @@
 # Install agent skills into ~/.agents/skills and symlink them into ~/.claude/skills.
 #
 # Works from a clone or via:
-#   curl -fsSL https://raw.githubusercontent.com/immanuel-peter/dotfiles/main/skills/install.sh | bash
+#   curl -fsSL \
+#     -H "Authorization: Bearer $(gh auth token)" \
+#     -H "Accept: application/vnd.github+json" \
+#     https://raw.githubusercontent.com/immanuel-peter/dotfiles/main/skills/install.sh | bash
 #
 # Override the GitHub source with DOTFILES_REPO / DOTFILES_REF if needed.
 set -euo pipefail
@@ -49,14 +52,31 @@ die() {
   exit 1
 }
 
+# Private repo. gh auth token is the bearer; do not print it.
+github_token() {
+  command -v gh >/dev/null 2>&1 || die "Need gh to download from GitHub"
+  local token
+  token="$(gh auth token)" || die "gh auth token failed. Run: gh auth login"
+  [[ -n "$token" ]] || die "gh auth token returned nothing. Run: gh auth login"
+  printf '%s' "$token"
+}
+
 download() {
   local url="$1"
   local dest="$2"
+  local token
+  token="$(github_token)"
   mkdir -p "$(dirname "$dest")"
   if command -v curl >/dev/null 2>&1; then
-    curl -fsSL "$url" -o "$dest"
+    curl -fsSL \
+      -H "Authorization: Bearer ${token}" \
+      -H "Accept: application/vnd.github+json" \
+      "$url" -o "$dest"
   elif command -v wget >/dev/null 2>&1; then
-    wget -qO "$dest" "$url"
+    wget -qO "$dest" \
+      --header="Authorization: Bearer ${token}" \
+      --header="Accept: application/vnd.github+json" \
+      "$url"
   else
     die "Need curl or wget to fetch ${url}"
   fi

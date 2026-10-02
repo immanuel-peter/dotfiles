@@ -2,12 +2,30 @@
 
 Configs to bootstrap a remote machine for coding agents.
 
-On a fresh box, no clone needed:
+On a fresh box, no clone needed. The repo is private, so each curl sends `gh auth token` as a bearer token (`gh auth login` first):
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/immanuel-peter/dotfiles/main/install-node.sh | bash
-curl -fsSL https://raw.githubusercontent.com/immanuel-peter/dotfiles/main/mcp/install.sh | bash
-curl -fsSL https://raw.githubusercontent.com/immanuel-peter/dotfiles/main/skills/install.sh | bash
+curl -fsSL \
+  -H "Authorization: Bearer $(gh auth token)" \
+  -H "Accept: application/vnd.github+json" \
+  https://raw.githubusercontent.com/immanuel-peter/dotfiles/main/setup.sh | bash
+```
+
+That installs nvm + Node LTS, MCP configs, and agent skills. To run one piece:
+
+```bash
+curl -fsSL \
+  -H "Authorization: Bearer $(gh auth token)" \
+  -H "Accept: application/vnd.github+json" \
+  https://raw.githubusercontent.com/immanuel-peter/dotfiles/main/install-node.sh | bash
+curl -fsSL \
+  -H "Authorization: Bearer $(gh auth token)" \
+  -H "Accept: application/vnd.github+json" \
+  https://raw.githubusercontent.com/immanuel-peter/dotfiles/main/mcp/install.sh | bash
+curl -fsSL \
+  -H "Authorization: Bearer $(gh auth token)" \
+  -H "Accept: application/vnd.github+json" \
+  https://raw.githubusercontent.com/immanuel-peter/dotfiles/main/skills/install.sh | bash
 ```
 
 Or from a checkout:
@@ -15,10 +33,7 @@ Or from a checkout:
 ```bash
 git clone https://github.com/immanuel-peter/dotfiles ~/dotfiles
 cd ~/dotfiles
-chmod +x install-node.sh mcp/install.sh skills/install.sh
-./install-node.sh      # nvm + Node LTS (skip if nvm/Node already installed)
-./mcp/install.sh       # MCP server configs
-./skills/install.sh    # agent skills (~/.agents/skills + Claude symlinks)
+./setup.sh
 ```
 
 ## Node — `install-node.sh`

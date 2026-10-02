@@ -3,7 +3,10 @@
 #
 # Does not install MCP configs — run mcp/install.sh after this.
 #
-#   curl -fsSL https://raw.githubusercontent.com/immanuel-peter/dotfiles/main/install-node.sh | bash
+#   curl -fsSL \
+#     -H "Authorization: Bearer $(gh auth token)" \
+#     -H "Accept: application/vnd.github+json" \
+#     https://raw.githubusercontent.com/immanuel-peter/dotfiles/main/install-node.sh | bash
 #
 # Override the GitHub source with DOTFILES_REPO / DOTFILES_REF if needed.
 set -euo pipefail
@@ -112,6 +115,11 @@ main() {
   info "Done"
   ok "Open a new shell (or: source ${NVM_DIR/#$HOME/~}/nvm.sh)"
 
+  # setup.sh runs MCP itself; don't tell the user to do that next.
+  if [[ -n "${DOTFILES_SETUP:-}" ]]; then
+    return
+  fi
+
   local sibling=""
   local src="${BASH_SOURCE[0]:-}"
   if [[ -n "$src" && -f "$src" ]]; then
@@ -120,7 +128,7 @@ main() {
   if [[ -n "$sibling" && -f "$sibling" ]]; then
     ok "Then install MCP configs:  $sibling"
   fi
-  ok "Or: curl -fsSL ${MCP_INSTALL_URL} | bash"
+  ok "Or: curl -fsSL -H \"Authorization: Bearer \$(gh auth token)\" -H \"Accept: application/vnd.github+json\" ${MCP_INSTALL_URL} | bash"
 }
 
 main "$@"
