@@ -88,6 +88,16 @@
       "command": ["agent-browser", "mcp"],
       "enabled": true
     },
+    "xurl": {
+      "type": "local",
+      "command": ["npx", "-y", "@xdevplatform/xurl", "mcp", "https://api.x.com/mcp"],
+      "environment": {
+        "CLIENT_ID": "{env:X_CLIENT_ID}",
+        "CLIENT_SECRET": "{env:X_CLIENT_SECRET}"
+      },
+      "timeout": 300000,
+      "enabled": true
+    },
     "OpenRouter": {
       "type": "remote",
       "url": "https://mcp.openrouter.ai/mcp",

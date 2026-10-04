@@ -28,6 +28,7 @@ Shared MCP server configs for coding agents.
 - Remotion
 - Playwright
 - Agent Browser
+- xurl
 - OpenRouter
 
 ## Environment variables
@@ -38,6 +39,8 @@ Shared MCP server configs for coding agents.
 | `GITHUB_MCP_PAT` | GitHub |
 | `PERPLEXITY_API_KEY` | Perplexity |
 | `ALPHAXIV_API_KEY` | alphaXiv |
+| `X_CLIENT_ID` | xurl |
+| `X_CLIENT_SECRET` | xurl |
 
 ## Installation
 
@@ -67,7 +70,7 @@ cd mcp && ./install.sh
 What the installer does:
 
 1. Checks the env vars above and reports any that are unset
-2. Installs the `agent-browser` CLI via `npm install -g` if it is missing, then `agent-browser install` (`--with-deps` on Linux). Does **not** install nvm or Node — run [`../install-node.sh`](../install-node.sh) (or the curl one-liner above) first if the machine has neither.
+2. Installs the `agent-browser` and `xurl` toolchains if missing.
 3. **Claude Code** — merges `mcpServers` from `claude.mcp.json` into the top-level key of `~/.claude.json`
 4. **Cursor** — copies `cursor.mcp.json` → `~/.cursor/mcp.json`
 5. **Codex** — merges `[mcp_servers.*]` tables from `mcp.toml` into `~/.codex/config.toml`

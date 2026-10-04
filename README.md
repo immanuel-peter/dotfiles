@@ -59,6 +59,7 @@ Installs [nvm](https://github.com/nvm-sh/nvm) into `~/.nvm` if it is missing, th
 - Remotion
 - Playwright
 - Agent Browser
+- xurl
 
 ### MCP Clients
 
@@ -79,3 +80,4 @@ Installed into `~/.agents/skills` and symlinked into `~/.claude/skills`.
 - html-communication
 - unslop
 - wait-what
+- xurl
