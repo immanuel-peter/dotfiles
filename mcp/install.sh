@@ -31,6 +31,8 @@ REQUIRED_ENV_VARS=(
   "GITHUB_MCP_PAT:GitHub"
   "PERPLEXITY_API_KEY:Perplexity"
   "ALPHAXIV_API_KEY:alphaXiv"
+  "CLIENT_ID:xurl"
+  "CLIENT_SECRET:xurl"
 )
 
 SCRIPT_DIR=""
@@ -217,8 +219,8 @@ ensure_agent_browser() {
   fi
 }
 
-# xurl is a global CLI (not npx). The MCP entry runs `xurl mcp`.
-# Credentials stay in ~/.xurl; this only checks that a token store exists.
+# Global xurl is for the skill. The MCP server is `npx -y @xdevplatform/xurl mcp`,
+# which opens the OAuth2 browser login from CLIENT_ID and CLIENT_SECRET.
 ensure_xurl() {
   info "Checking xurl CLI"
   load_nvm
@@ -236,7 +238,7 @@ ensure_xurl() {
     if npm install -g @xdevplatform/xurl; then
       ok "Installed $(command -v xurl)"
     else
-      warn "npm install -g @xdevplatform/xurl failed; xurl MCP will not start"
+      warn "npm install -g @xdevplatform/xurl failed; xurl skill commands will not run"
       return 0
     fi
   fi

@@ -73,8 +73,12 @@
       "args": ["mcp"]
     },
     "xurl": {
-      "command": "xurl",
-      "args": ["mcp", "https://api.x.com/mcp"]
+      "command": "npx",
+      "args": ["-y", "@xdevplatform/xurl", "mcp", "https://api.x.com/mcp"],
+      "env": {
+        "CLIENT_ID": "${CLIENT_ID}",
+        "CLIENT_SECRET": "${CLIENT_SECRET}"
+      }
     },
     "OpenRouter": {
       "type": "http",

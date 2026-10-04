@@ -64,8 +64,12 @@
       "args": ["mcp"]
     },
     "xurl": {
-      "command": "xurl",
-      "args": ["mcp", "https://api.x.com/mcp"]
+      "command": "npx",
+      "args": ["-y", "@xdevplatform/xurl", "mcp", "https://api.x.com/mcp"],
+      "env": {
+        "CLIENT_ID": "${env:CLIENT_ID}",
+        "CLIENT_SECRET": "${env:CLIENT_SECRET}"
+      }
     },
     "OpenRouter": {
       "url": "https://mcp.openrouter.ai/mcp"

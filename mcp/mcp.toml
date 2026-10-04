@@ -54,9 +54,10 @@ command = "agent-browser"
 args = ["mcp"]
 
 [mcp_servers.xurl]
-command = "xurl"
-args = ["mcp", "https://api.x.com/mcp"]
+command = "npx"
+args = ["-y", "@xdevplatform/xurl", "mcp", "https://api.x.com/mcp"]
 startup_timeout_sec = 300
+env_vars = ["CLIENT_ID", "CLIENT_SECRET"]
 
 [mcp_servers.openrouter]
 url = "https://mcp.openrouter.ai/mcp"
