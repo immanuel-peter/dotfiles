@@ -53,5 +53,10 @@ args = ["@playwright/mcp@latest"]
 command = "agent-browser"
 args = ["mcp"]
 
+[mcp_servers.xurl]
+command = "xurl"
+args = ["mcp", "https://api.x.com/mcp"]
+startup_timeout_sec = 300
+
 [mcp_servers.openrouter]
 url = "https://mcp.openrouter.ai/mcp"

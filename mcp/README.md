@@ -28,6 +28,7 @@ Shared MCP server configs for coding agents.
 - Remotion
 - Playwright
 - Agent Browser
+- xurl
 - OpenRouter
 
 ## Environment variables
@@ -38,6 +39,7 @@ Shared MCP server configs for coding agents.
 | `GITHUB_MCP_PAT` | GitHub |
 | `PERPLEXITY_API_KEY` | Perplexity |
 | `ALPHAXIV_API_KEY` | alphaXiv |
+| `CLIENT_ID`, `CLIENT_SECRET` | xurl, only for the one-time `xurl auth oauth2` (optional once `~/.xurl` has an app) |
 
 ## Installation
 
@@ -67,7 +69,7 @@ cd mcp && ./install.sh
 What the installer does:
 
 1. Checks the env vars above and reports any that are unset
-2. Installs the `agent-browser` CLI via `npm install -g` if it is missing, then `agent-browser install` (`--with-deps` on Linux). Does **not** install nvm or Node — run [`../install-node.sh`](../install-node.sh) (or the curl one-liner above) first if the machine has neither.
+2. Installs the `agent-browser` CLI via `npm install -g` if it is missing, then `agent-browser install` (`--with-deps` on Linux). Installs the `xurl` CLI via `npm install -g @xdevplatform/xurl` if it is missing. Does **not** install nvm or Node — run [`../install-node.sh`](../install-node.sh) (or the curl one-liner above) first if the machine has neither. xurl keeps app credentials in `~/.xurl` (register them yourself, then `xurl auth oauth2`). The MCP entry runs that binary (`xurl mcp https://api.x.com/mcp`) and does not embed secrets. Codex waits up to 300s and OpenCode up to 300s so a first-run browser login can finish.
 3. **Claude Code** — merges `mcpServers` from `claude.mcp.json` into the top-level key of `~/.claude.json`
 4. **Cursor** — copies `cursor.mcp.json` → `~/.cursor/mcp.json`
 5. **Codex** — merges `[mcp_servers.*]` tables from `mcp.toml` into `~/.codex/config.toml`

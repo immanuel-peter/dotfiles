@@ -63,6 +63,10 @@
       "command": "agent-browser",
       "args": ["mcp"]
     },
+    "xurl": {
+      "command": "xurl",
+      "args": ["mcp", "https://api.x.com/mcp"]
+    },
     "OpenRouter": {
       "url": "https://mcp.openrouter.ai/mcp"
     }

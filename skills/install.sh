@@ -22,6 +22,7 @@ SKILLS=(
   html-communication
   unslop
   wait-what
+  xurl
 )
 
 AGENTS_SKILLS="${HOME}/.agents/skills"

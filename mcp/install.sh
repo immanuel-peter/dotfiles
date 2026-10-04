@@ -7,7 +7,7 @@
 # - OpenCode:    copy opencode.mcp.json -> ~/.config/opencode/opencode.jsonc
 #
 # Also reports which MCP-related env vars are missing on this machine.
-# If agent-browser is missing and npm is available, installs the CLI globally.
+# If agent-browser or xurl is missing and npm is available, installs that CLI globally.
 #
 # Works from a clone or via:
 #   curl -fsSL \
@@ -217,6 +217,43 @@ ensure_agent_browser() {
   fi
 }
 
+# xurl is a global CLI (not npx). The MCP entry runs `xurl mcp`.
+# Credentials stay in ~/.xurl; this only checks that a token store exists.
+ensure_xurl() {
+  info "Checking xurl CLI"
+  load_nvm
+
+  if command -v xurl >/dev/null 2>&1; then
+    ok "xurl $(xurl version 2>/dev/null | awk '{print $NF}')"
+  else
+    if ! command -v npm >/dev/null 2>&1; then
+      warn "xurl not on PATH and npm is missing"
+      warn "Install Node first: curl -fsSL -H \"Authorization: Bearer \$(gh auth token)\" -H \"Accept: application/vnd.github+json\" https://raw.githubusercontent.com/${DOTFILES_REPO}/${DOTFILES_REF}/install-node.sh | bash"
+      return 0
+    fi
+
+    info "Installing @xdevplatform/xurl via npm -g"
+    if npm install -g @xdevplatform/xurl; then
+      ok "Installed $(command -v xurl)"
+    else
+      warn "npm install -g @xdevplatform/xurl failed; xurl MCP will not start"
+      return 0
+    fi
+  fi
+
+  if [[ -f "${HOME}/.xurl/auth.yml" || -f "${HOME}/.xurl" ]]; then
+    ok "xurl credential store present (~/.xurl)"
+  elif [[ -n "${CLIENT_ID:-}" && -n "${CLIENT_SECRET:-}" ]]; then
+    ok "set: CLIENT_ID, CLIENT_SECRET (xurl first-run login)"
+  else
+    warn "xurl has no ~/.xurl credential store and CLIENT_ID/CLIENT_SECRET are unset"
+    printf '%s\n' "${C_DIM}Register the app yourself, then authenticate outside an agent session:${C_RESET}"
+    printf '  export CLIENT_ID="…"\n'
+    printf '  export CLIENT_SECRET="…"\n'
+    printf '  xurl auth oauth2\n'
+  fi
+}
+
 # ---------------------------------------------------------------------------
 # Env var check
 # ---------------------------------------------------------------------------
@@ -422,6 +459,8 @@ main() {
   check_env_vars
   echo
   ensure_agent_browser
+  echo
+  ensure_xurl
   echo
 
   install_claude
