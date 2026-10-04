@@ -31,8 +31,8 @@ REQUIRED_ENV_VARS=(
   "GITHUB_MCP_PAT:GitHub"
   "PERPLEXITY_API_KEY:Perplexity"
   "ALPHAXIV_API_KEY:alphaXiv"
-  "CLIENT_ID:xurl"
-  "CLIENT_SECRET:xurl"
+  "X_CLIENT_ID:xurl"
+  "X_CLIENT_SECRET:xurl"
 )
 
 SCRIPT_DIR=""
@@ -219,8 +219,9 @@ ensure_agent_browser() {
   fi
 }
 
-# Global xurl is for the skill. The MCP server is `npx -y @xdevplatform/xurl mcp`,
-# which opens the OAuth2 browser login from CLIENT_ID and CLIENT_SECRET.
+# Global xurl is for the skill. The MCP server is `npx -y @xdevplatform/xurl mcp`.
+# xurl reads CLIENT_ID and CLIENT_SECRET; the client configs map those from
+# X_CLIENT_ID and X_CLIENT_SECRET.
 ensure_xurl() {
   info "Checking xurl CLI"
   load_nvm
@@ -245,14 +246,14 @@ ensure_xurl() {
 
   if [[ -f "${HOME}/.xurl/auth.yml" || -f "${HOME}/.xurl" ]]; then
     ok "xurl credential store present (~/.xurl)"
-  elif [[ -n "${CLIENT_ID:-}" && -n "${CLIENT_SECRET:-}" ]]; then
-    ok "set: CLIENT_ID, CLIENT_SECRET (xurl first-run login)"
+  elif [[ -n "${X_CLIENT_ID:-}" && -n "${X_CLIENT_SECRET:-}" ]]; then
+    ok "set: X_CLIENT_ID, X_CLIENT_SECRET (xurl first-run login)"
   else
-    warn "xurl has no ~/.xurl credential store and CLIENT_ID/CLIENT_SECRET are unset"
+    warn "xurl has no ~/.xurl credential store and X_CLIENT_ID/X_CLIENT_SECRET are unset"
     printf '%s\n' "${C_DIM}Register the app yourself, then authenticate outside an agent session:${C_RESET}"
-    printf '  export CLIENT_ID="…"\n'
-    printf '  export CLIENT_SECRET="…"\n'
-    printf '  xurl auth oauth2\n'
+    printf '  export X_CLIENT_ID="…"\n'
+    printf '  export X_CLIENT_SECRET="…"\n'
+    printf '  CLIENT_ID="$X_CLIENT_ID" CLIENT_SECRET="$X_CLIENT_SECRET" xurl auth oauth2\n'
   fi
 }
 

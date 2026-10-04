@@ -39,8 +39,8 @@ Shared MCP server configs for coding agents.
 | `GITHUB_MCP_PAT` | GitHub |
 | `PERPLEXITY_API_KEY` | Perplexity |
 | `ALPHAXIV_API_KEY` | alphaXiv |
-| `CLIENT_ID` | xurl |
-| `CLIENT_SECRET` | xurl |
+| `X_CLIENT_ID` | xurl |
+| `X_CLIENT_SECRET` | xurl |
 
 ## Installation
 

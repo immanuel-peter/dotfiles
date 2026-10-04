@@ -67,8 +67,8 @@
       "command": "npx",
       "args": ["-y", "@xdevplatform/xurl", "mcp", "https://api.x.com/mcp"],
       "env": {
-        "CLIENT_ID": "${env:CLIENT_ID}",
-        "CLIENT_SECRET": "${env:CLIENT_SECRET}"
+        "CLIENT_ID": "${env:X_CLIENT_ID}",
+        "CLIENT_SECRET": "${env:X_CLIENT_SECRET}"
       }
     },
     "OpenRouter": {

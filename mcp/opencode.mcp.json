@@ -92,8 +92,8 @@
       "type": "local",
       "command": ["npx", "-y", "@xdevplatform/xurl", "mcp", "https://api.x.com/mcp"],
       "environment": {
-        "CLIENT_ID": "{env:CLIENT_ID}",
-        "CLIENT_SECRET": "{env:CLIENT_SECRET}"
+        "CLIENT_ID": "{env:X_CLIENT_ID}",
+        "CLIENT_SECRET": "{env:X_CLIENT_SECRET}"
       },
       "timeout": 300000,
       "enabled": true
