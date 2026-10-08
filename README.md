@@ -11,7 +11,7 @@ curl -fsSL \
   https://raw.githubusercontent.com/immanuel-peter/dotfiles/main/setup.sh | bash
 ```
 
-That installs nvm + Node LTS, MCP configs, and agent skills. To run one piece:
+That installs nvm + Node LTS, the agent CLIs, MCP configs, and agent skills. To run one piece:
 
 ```bash
 curl -fsSL \
@@ -42,7 +42,7 @@ Installs [nvm](https://github.com/nvm-sh/nvm) into `~/.nvm` if it is missing, th
 
 ## Agents — `agents/`
 
-Installs coding agents.
+Installs agent CLIs. Sign-in stays outside the scripts.
 
 - Claude Code
 - Codex

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Bootstrap a machine for coding agents: nvm + Node LTS, MCP configs, skills.
+# Bootstrap a machine for coding agents: nvm + Node LTS, agent CLIs, MCP configs, skills.
 #
 #   curl -fsSL \
 #     -H "Authorization: Bearer $(gh auth token)" \
@@ -96,6 +96,7 @@ resolve_root() {
 
   if [[ -n "$dir" \
     && -f "$dir/install-node.sh" \
+    && -f "$dir/agents/install.sh" \
     && -f "$dir/mcp/install.sh" \
     && -f "$dir/skills/install.sh" ]]; then
     ROOT="$dir"
@@ -113,12 +114,12 @@ resolve_root() {
 
   extracted=""
   for candidate in "$tmp"/*; do
-    if [[ -d "$candidate" && -f "$candidate/install-node.sh" ]]; then
+    if [[ -d "$candidate" && -f "$candidate/install-node.sh" && -f "$candidate/agents/install.sh" ]]; then
       extracted="$candidate"
       break
     fi
   done
-  [[ -n "$extracted" ]] || die "Archive from ${ARCHIVE_URL} has no install-node.sh"
+  [[ -n "$extracted" ]] || die "Archive from ${ARCHIVE_URL} is missing install-node.sh or agents/install.sh"
 
   ROOT="$extracted"
   ok "Fetched repo into ${ROOT}"
@@ -134,9 +135,9 @@ run_installer() {
 
 main() {
   printf '%s\n' "${C_BOLD}Dotfiles setup${C_RESET}"
-  printf '%s\n\n' "${C_DIM}Node LTS, MCP configs, agent skills${C_RESET}"
+  printf '%s\n\n' "${C_DIM}Node LTS, agent CLIs, MCP configs, agent skills${C_RESET}"
 
-  # Fail before Node install. mcp/install.sh needs both, and it runs second.
+  # Fail before any installer. mcp/install.sh needs both.
   require_cmd python3 "needed to merge Codex MCP config"
   require_cmd jq "needed to merge Claude MCP config"
 
@@ -149,13 +150,15 @@ main() {
 
   run_installer "Node install" "${ROOT}/install-node.sh"
   echo
+  run_installer "Agents install" "${ROOT}/agents/install.sh"
+  echo
   run_installer "MCP install" "${ROOT}/mcp/install.sh"
   echo
   run_installer "Skills install" "${ROOT}/skills/install.sh"
   echo
 
   info "Setup complete"
-  ok "Node LTS via nvm, MCP configs, and agent skills"
+  ok "Node LTS via nvm, agent CLIs, MCP configs, and agent skills"
   ok "Open a new shell so nvm's node is on PATH"
 }
 
