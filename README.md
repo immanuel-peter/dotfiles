@@ -40,6 +40,16 @@ cd ~/dotfiles
 
 Installs [nvm](https://github.com/nvm-sh/nvm) into `~/.nvm` if it is missing, then `nvm install --lts` and sets that as the default. Uses an existing nvm when already present.
 
+## Agents — `agents/`
+
+Installs coding agents.
+
+- Claude Code
+- Codex
+- OpenCode
+- Grok Build
+- Muse Code
+
 ## MCP - `mcp/`
 
 ### MCP Servers
