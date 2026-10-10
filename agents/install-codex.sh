@@ -4,7 +4,9 @@
 #
 #   ./agents/install-codex.sh
 #
-# The vendor script is POSIX sh. Sign-in is separate: run `codex`.
+# The vendor script is POSIX sh. CODEX_NON_INTERACTIVE must be set on that
+# shell so the post-install "Start Codex now?" prompt is skipped.
+# Sign-in is separate: run `codex`.
 set -euo pipefail
 
 command -v curl >/dev/null 2>&1 || {
@@ -12,4 +14,4 @@ command -v curl >/dev/null 2>&1 || {
   exit 1
 }
 
-curl -fsSL https://chatgpt.com/codex/install.sh | sh
+curl -fsSL https://chatgpt.com/codex/install.sh | CODEX_NON_INTERACTIVE=1 sh
