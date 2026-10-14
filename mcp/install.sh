@@ -10,10 +10,7 @@
 # If agent-browser or xurl is missing and npm is available, installs that CLI globally.
 #
 # Works from a clone or via:
-#   curl -fsSL \
-#     -H "Authorization: Bearer $(gh auth token)" \
-#     -H "Accept: application/vnd.github+json" \
-#     https://raw.githubusercontent.com/immanuel-peter/dotfiles/main/mcp/install.sh | bash
+#   curl -fsSL https://raw.githubusercontent.com/immanuel-peter/dotfiles/main/mcp/install.sh | bash
 #
 # Override the GitHub source with DOTFILES_REPO / DOTFILES_REF if needed.
 set -euo pipefail
@@ -87,30 +84,13 @@ ensure_parent_dir() {
   mkdir -p "$(dirname "$1")"
 }
 
-# Private repo. gh auth token is the bearer; do not print it.
-github_token() {
-  command -v gh >/dev/null 2>&1 || die "Need gh to download from GitHub"
-  local token
-  token="$(gh auth token)" || die "gh auth token failed. Run: gh auth login"
-  [[ -n "$token" ]] || die "gh auth token returned nothing. Run: gh auth login"
-  printf '%s' "$token"
-}
-
 download() {
   local url="$1"
   local dest="$2"
-  local token
-  token="$(github_token)"
   if command -v curl >/dev/null 2>&1; then
-    curl -fsSL \
-      -H "Authorization: Bearer ${token}" \
-      -H "Accept: application/vnd.github+json" \
-      "$url" -o "$dest"
+    curl -fsSL "$url" -o "$dest"
   elif command -v wget >/dev/null 2>&1; then
-    wget -qO "$dest" \
-      --header="Authorization: Bearer ${token}" \
-      --header="Accept: application/vnd.github+json" \
-      "$url"
+    wget -qO "$dest" "$url"
   else
     die "Need curl or wget to fetch ${url}"
   fi
@@ -195,7 +175,7 @@ ensure_agent_browser() {
   else
     if ! command -v npm >/dev/null 2>&1; then
       warn "agent-browser not on PATH and npm is missing"
-      warn "Install Node first: curl -fsSL -H \"Authorization: Bearer \$(gh auth token)\" -H \"Accept: application/vnd.github+json\" https://raw.githubusercontent.com/${DOTFILES_REPO}/${DOTFILES_REF}/install-node.sh | bash"
+      warn "Install Node first: curl -fsSL https://raw.githubusercontent.com/${DOTFILES_REPO}/${DOTFILES_REF}/install-node.sh | bash"
       return 0
     fi
 
@@ -231,7 +211,7 @@ ensure_xurl() {
   else
     if ! command -v npm >/dev/null 2>&1; then
       warn "xurl not on PATH and npm is missing"
-      warn "Install Node first: curl -fsSL -H \"Authorization: Bearer \$(gh auth token)\" -H \"Accept: application/vnd.github+json\" https://raw.githubusercontent.com/${DOTFILES_REPO}/${DOTFILES_REF}/install-node.sh | bash"
+      warn "Install Node first: curl -fsSL https://raw.githubusercontent.com/${DOTFILES_REPO}/${DOTFILES_REF}/install-node.sh | bash"
       return 0
     fi
 

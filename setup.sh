@@ -1,10 +1,7 @@
 #!/usr/bin/env bash
 # Bootstrap a machine for coding agents: nvm + Node LTS, agent CLIs, MCP configs, skills.
 #
-#   curl -fsSL \
-#     -H "Authorization: Bearer $(gh auth token)" \
-#     -H "Accept: application/vnd.github+json" \
-#     https://raw.githubusercontent.com/immanuel-peter/dotfiles/main/setup.sh | bash
+#   curl -fsSL https://raw.githubusercontent.com/immanuel-peter/dotfiles/main/setup.sh | bash
 #
 # From a checkout: ./setup.sh
 #
@@ -52,30 +49,13 @@ cleanup() {
 }
 trap cleanup EXIT
 
-# Private repo. gh auth token is the bearer; do not print it.
-github_token() {
-  command -v gh >/dev/null 2>&1 || die "Need gh to download from GitHub"
-  local token
-  token="$(gh auth token)" || die "gh auth token failed. Run: gh auth login"
-  [[ -n "$token" ]] || die "gh auth token returned nothing. Run: gh auth login"
-  printf '%s' "$token"
-}
-
 download() {
   local url="$1"
   local dest="$2"
-  local token
-  token="$(github_token)"
   if command -v curl >/dev/null 2>&1; then
-    curl -fsSL \
-      -H "Authorization: Bearer ${token}" \
-      -H "Accept: application/vnd.github+json" \
-      "$url" -o "$dest"
+    curl -fsSL "$url" -o "$dest"
   elif command -v wget >/dev/null 2>&1; then
-    wget -qO "$dest" \
-      --header="Authorization: Bearer ${token}" \
-      --header="Accept: application/vnd.github+json" \
-      "$url"
+    wget -qO "$dest" "$url"
   else
     die "Need curl or wget to fetch ${url}"
   fi

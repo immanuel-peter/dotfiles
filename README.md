@@ -2,30 +2,19 @@
 
 Configs to bootstrap a remote machine for coding agents.
 
-On a fresh box, no clone needed. The repo is private, so each curl sends `gh auth token` as a bearer token (`gh auth login` first):
+On a fresh box, no clone needed:
 
 ```bash
-curl -fsSL \
-  -H "Authorization: Bearer $(gh auth token)" \
-  -H "Accept: application/vnd.github+json" \
-  https://raw.githubusercontent.com/immanuel-peter/dotfiles/main/setup.sh | bash
+curl -fsSL https://raw.githubusercontent.com/immanuel-peter/dotfiles/main/setup.sh | bash
 ```
 
 That installs nvm + Node LTS, the agent CLIs, MCP configs, and agent skills. To run one piece:
 
 ```bash
-curl -fsSL \
-  -H "Authorization: Bearer $(gh auth token)" \
-  -H "Accept: application/vnd.github+json" \
-  https://raw.githubusercontent.com/immanuel-peter/dotfiles/main/install-node.sh | bash
-curl -fsSL \
-  -H "Authorization: Bearer $(gh auth token)" \
-  -H "Accept: application/vnd.github+json" \
-  https://raw.githubusercontent.com/immanuel-peter/dotfiles/main/mcp/install.sh | bash
-curl -fsSL \
-  -H "Authorization: Bearer $(gh auth token)" \
-  -H "Accept: application/vnd.github+json" \
-  https://raw.githubusercontent.com/immanuel-peter/dotfiles/main/skills/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/immanuel-peter/dotfiles/main/install-node.sh | bash
+curl -fsSL https://raw.githubusercontent.com/immanuel-peter/dotfiles/main/agents/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/immanuel-peter/dotfiles/main/mcp/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/immanuel-peter/dotfiles/main/skills/install.sh | bash
 ```
 
 Or from a checkout:

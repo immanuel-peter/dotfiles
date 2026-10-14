@@ -47,14 +47,8 @@ Shared MCP server configs for coding agents.
 No clone needed:
 
 ```bash
-curl -fsSL \
-  -H "Authorization: Bearer $(gh auth token)" \
-  -H "Accept: application/vnd.github+json" \
-  https://raw.githubusercontent.com/immanuel-peter/dotfiles/main/install-node.sh | bash
-curl -fsSL \
-  -H "Authorization: Bearer $(gh auth token)" \
-  -H "Accept: application/vnd.github+json" \
-  https://raw.githubusercontent.com/immanuel-peter/dotfiles/main/mcp/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/immanuel-peter/dotfiles/main/install-node.sh | bash
+curl -fsSL https://raw.githubusercontent.com/immanuel-peter/dotfiles/main/mcp/install.sh | bash
 ```
 
 Or from a checkout:

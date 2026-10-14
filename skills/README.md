@@ -23,10 +23,7 @@ Shared agent skills. Installed into `~/.agents/skills` (the copy other clients r
 No clone needed:
 
 ```bash
-curl -fsSL \
-  -H "Authorization: Bearer $(gh auth token)" \
-  -H "Accept: application/vnd.github+json" \
-  https://raw.githubusercontent.com/immanuel-peter/dotfiles/main/skills/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/immanuel-peter/dotfiles/main/skills/install.sh | bash
 ```
 
 Or from a checkout:
