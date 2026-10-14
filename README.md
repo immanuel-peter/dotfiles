@@ -76,6 +76,7 @@ Installed into `~/.agents/skills` and symlinked into `~/.claude/skills`.
 - asset-upload
 - bro
 - frontend-design
+- gh
 - html-communication
 - unslop
 - wait-what

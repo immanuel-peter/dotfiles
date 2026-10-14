@@ -16,6 +16,7 @@ SKILLS=(
   asset-upload
   bro
   frontend-design
+  gh
   html-communication
   unslop
   wait-what
