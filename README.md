@@ -8,9 +8,10 @@ On a fresh box, no clone needed:
 curl -fsSL https://raw.githubusercontent.com/immanuel-peter/dotfiles/main/setup.sh | bash
 ```
 
-That installs nvm + Node LTS, the agent CLIs, MCP configs, and agent skills. To run one piece:
+That installs Linux apt packages, nvm + Node LTS, the agent CLIs, MCP configs, and agent skills. To run one piece:
 
 ```bash
+curl -fsSL https://raw.githubusercontent.com/immanuel-peter/dotfiles/main/deps/install-apt.sh | bash
 curl -fsSL https://raw.githubusercontent.com/immanuel-peter/dotfiles/main/install-node.sh | bash
 curl -fsSL https://raw.githubusercontent.com/immanuel-peter/dotfiles/main/agents/install.sh | bash
 curl -fsSL https://raw.githubusercontent.com/immanuel-peter/dotfiles/main/mcp/install.sh | bash
@@ -24,6 +25,10 @@ git clone https://github.com/immanuel-peter/dotfiles ~/dotfiles
 cd ~/dotfiles
 ./setup.sh
 ```
+
+## Apt — `deps/install-apt.sh`
+
+Installs [cloudflared](https://developers.cloudflare.com/tunnel/downloads/) from Cloudflare's apt repository on Debian and Ubuntu. Other systems skip this step. An existing `cloudflared` on `PATH` is left as it is.
 
 ## Node — `install-node.sh`
 
