@@ -64,7 +64,7 @@ cd mcp && ./install.sh
 What the installer does:
 
 1. Checks the env vars above and reports any that are unset
-2. Installs the `agent-browser` and `xurl` toolchains if missing.
+2. Installs the `agent-browser` and `xurl` toolchains if missing, plus Google Chrome for Playwright MCP.
 3. **Claude Code** — merges `mcpServers` from `claude.mcp.json` into the top-level key of `~/.claude.json`
 4. **Cursor** — copies `cursor.mcp.json` → `~/.cursor/mcp.json`
 5. **Codex** — merges `[mcp_servers.*]` tables from `mcp.toml` into `~/.codex/config.toml`

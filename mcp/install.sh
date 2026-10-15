@@ -8,6 +8,7 @@
 #
 # Also reports which MCP-related env vars are missing on this machine.
 # If agent-browser or xurl is missing and npm is available, installs that CLI globally.
+# Installs Google Chrome for Playwright MCP if missing.
 #
 # Works from a clone or via:
 #   curl -fsSL https://raw.githubusercontent.com/immanuel-peter/dotfiles/main/mcp/install.sh | bash
@@ -196,6 +197,45 @@ ensure_agent_browser() {
     else
       warn "agent-browser install failed; run it manually before using Agent Browser"
     fi
+  fi
+}
+
+# Playwright MCP uses the system Google Chrome installation by default.
+ensure_playwright_chrome() {
+  info "Checking Google Chrome for Playwright MCP"
+  load_nvm
+
+  local chrome_path
+  local install_args=(--yes playwright install)
+  case "$(uname -s)" in
+    Darwin) chrome_path="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" ;;
+    Linux)
+      chrome_path="/opt/google/chrome/chrome"
+      install_args+=(--with-deps)
+      ;;
+    *)
+      warn "Install Google Chrome manually before using Playwright MCP on this OS"
+      return 0
+      ;;
+  esac
+  install_args+=(chrome)
+
+  if [[ -x "$chrome_path" ]]; then
+    ok "Google Chrome is already installed"
+    return 0
+  fi
+
+  if ! command -v npx >/dev/null 2>&1; then
+    warn "Google Chrome is missing and npx is unavailable; install Node first"
+    return 0
+  fi
+
+  info "Installing Google Chrome for Playwright MCP"
+  if npx "${install_args[@]}"; then
+    ok "Google Chrome ready for Playwright MCP"
+  else
+    warn "Google Chrome install failed; Playwright MCP needs it before use"
+    warn "Run: npx ${install_args[*]}"
   fi
 }
 
@@ -442,6 +482,8 @@ main() {
   check_env_vars
   echo
   ensure_agent_browser
+  echo
+  ensure_playwright_chrome
   echo
   ensure_xurl
   echo
