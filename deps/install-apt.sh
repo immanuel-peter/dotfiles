@@ -7,7 +7,8 @@
 #   curl -fsSL https://raw.githubusercontent.com/immanuel-peter/dotfiles/main/deps/install-apt.sh | bash
 #
 # Skips on non-Linux, and on Linux when apt-get is missing. Skips cloudflared
-# when it is already on PATH. sudo is used only for the apt steps.
+# when it is already on PATH. Requires root or passwordless/cached sudo;
+# never prompts for credentials or package configuration.
 set -euo pipefail
 
 if [[ -t 1 ]]; then
@@ -44,19 +45,26 @@ install_cloudflared() {
   fi
 
   command -v curl >/dev/null 2>&1 || die "Need curl to fetch the Cloudflare apt key"
-  command -v sudo >/dev/null 2>&1 || die "Need sudo to install cloudflared"
+  local -a elevate=()
+  if (( EUID != 0 )); then
+    command -v sudo >/dev/null 2>&1 || die "Need root or sudo to install cloudflared"
+    sudo -n true || die "Need passwordless or cached sudo. Run sudo -v separately, then retry."
+    elevate=(sudo -n)
+  fi
 
-  info "Installing cloudflared (sudo)"
-  sudo -v
+  info "Installing cloudflared"
 
-  sudo mkdir -p --mode=0755 /usr/share/keyrings
+  "${elevate[@]}" mkdir -p --mode=0755 /usr/share/keyrings
   curl -fsSL https://pkg.cloudflare.com/cloudflare-main.gpg \
-    | sudo tee /usr/share/keyrings/cloudflare-main.gpg >/dev/null
+    | "${elevate[@]}" tee /usr/share/keyrings/cloudflare-main.gpg >/dev/null
   echo 'deb [signed-by=/usr/share/keyrings/cloudflare-main.gpg] https://pkg.cloudflare.com/cloudflared any main' \
-    | sudo tee /etc/apt/sources.list.d/cloudflared.list >/dev/null
+    | "${elevate[@]}" tee /etc/apt/sources.list.d/cloudflared.list >/dev/null
 
-  sudo DEBIAN_FRONTEND=noninteractive apt-get update
-  sudo DEBIAN_FRONTEND=noninteractive apt-get install -y cloudflared
+  "${elevate[@]}" env DEBIAN_FRONTEND=noninteractive NEEDRESTART_MODE=a \
+    apt-get update </dev/null
+  "${elevate[@]}" env DEBIAN_FRONTEND=noninteractive NEEDRESTART_MODE=a \
+    apt-get install -y -o Dpkg::Options::=--force-confdef \
+      -o Dpkg::Options::=--force-confold cloudflared </dev/null
 
   command -v cloudflared >/dev/null 2>&1 || die "cloudflared install finished but it is not on PATH"
   ok "cloudflared $(cloudflared_version)"
