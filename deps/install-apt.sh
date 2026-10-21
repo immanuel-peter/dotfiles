@@ -9,13 +9,9 @@
 #   curl -fsSL https://raw.githubusercontent.com/immanuel-peter/dotfiles/main/deps/install-apt.sh | bash
 #
 # Skips on non-Linux, and on Linux when apt-get is missing. Skips cloudflared
-<<<<<<< HEAD
-# when it is already on PATH. Requires root or passwordless/cached sudo;
-# never prompts for credentials or package configuration.
-=======
 # when it is already on PATH. gh is installed or upgraded from the official
-# repository. sudo is used only for the apt steps.
->>>>>>> 7fcb27f (chore(apt): install GitHub CLI from official repository)
+# repository. Also installs venv support for the distro's default Python.
+# sudo is used only for the apt steps.
 set -euo pipefail
 
 if [[ -t 1 ]]; then
@@ -42,6 +38,23 @@ die() {
 
 cloudflared_version() {
   cloudflared --version 2>/dev/null | awk 'NR==1 { print $3 }'
+}
+
+install_python_venv() {
+  info "Installing Python venv support"
+  local -a elevate=()
+  if (( EUID != 0 )); then
+    command -v sudo >/dev/null 2>&1 || die "Need root or sudo to install python3-venv"
+    sudo -n true || die "Need passwordless or cached sudo. Run sudo -v separately, then retry."
+    elevate=(sudo -n)
+  fi
+
+  "${elevate[@]}" env DEBIAN_FRONTEND=noninteractive NEEDRESTART_MODE=a \
+    apt-get update </dev/null
+  "${elevate[@]}" env DEBIAN_FRONTEND=noninteractive NEEDRESTART_MODE=a \
+    apt-get install -y -o Dpkg::Options::=--force-confdef \
+      -o Dpkg::Options::=--force-confold python3-venv </dev/null
+  ok "Python venv support installed"
 }
 
 install_cloudflared() {
@@ -117,7 +130,7 @@ install_gh() {
 
 main() {
   printf '%s\n' "${C_BOLD}Apt packages${C_RESET}"
-  printf '%s\n\n' "${C_DIM}cloudflared and gh on Debian and Ubuntu${C_RESET}"
+  printf '%s\n\n' "${C_DIM}Python venv support, cloudflared, and gh on Debian and Ubuntu${C_RESET}"
 
   if [[ "$(uname -s)" != Linux ]]; then
     ok "Not Linux ($(uname -s)); skipping apt packages"
@@ -129,6 +142,8 @@ main() {
     return
   fi
 
+  install_python_venv
+  echo
   install_cloudflared
   echo
   install_gh

@@ -8,10 +8,11 @@ On a fresh box, no clone needed:
 curl -fsSL https://raw.githubusercontent.com/immanuel-peter/dotfiles/main/setup.sh | bash
 ```
 
-That installs Linux apt packages, nvm + Node LTS, the agent CLIs, MCP configs, and agent skills. To run one piece:
+That installs Linux apt packages, HF CLI, nvm + Node LTS, the agent CLIs, MCP configs, and agent skills. To run one piece:
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/immanuel-peter/dotfiles/main/deps/install-apt.sh | bash
+curl -fsSL https://raw.githubusercontent.com/immanuel-peter/dotfiles/main/deps/install-hf.sh | bash
 curl -fsSL https://raw.githubusercontent.com/immanuel-peter/dotfiles/main/install-node.sh | bash
 curl -fsSL https://raw.githubusercontent.com/immanuel-peter/dotfiles/main/agents/install.sh | bash
 curl -fsSL https://raw.githubusercontent.com/immanuel-peter/dotfiles/main/mcp/install.sh | bash
@@ -29,6 +30,14 @@ cd ~/dotfiles
 ## Apt — `deps/install-apt.sh`
 
 Installs [cloudflared](https://developers.cloudflare.com/tunnel/downloads/) from Cloudflare's apt repository and the [gh](https://cli.github.com/) from GitHub's apt repository on Debian and Ubuntu. Other systems skip this step. An existing `cloudflared` on `PATH` is left as it is. `gh` is installed or upgraded.
+
+Also installs `python3-venv`, which pulls in venv support for the distro's default Python, including `python3.10-venv` on Ubuntu 22.04 and `python3.12-venv` on Ubuntu 24.04.
+
+## Hugging Face CLI — `deps/install-hf.sh`
+
+Installs [HF CLI](https://huggingface.co/docs/huggingface_hub/en/guides/cli) with the official installer as the current user. Setup runs this after apt dependencies. A working `hf` on `PATH` or in `~/.local/bin` is left as it is. The vendor installer supports macOS and Linux, requires Python 3.10+, and manages the shell's PATH entry for `~/.local/bin`.
+
+For a standalone install on Debian/Ubuntu, run `deps/install-apt.sh` first. The HF installer checks that its selected Python can create a venv, including pip. A custom Python earlier on `PATH` needs its own venv/ensurepip support. Sign in separately with `hf auth login`.
 
 ## Node — `install-node.sh`
 

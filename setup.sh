@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Bootstrap a machine for coding agents: Linux apt packages, nvm + Node LTS,
-# agent CLIs, MCP configs, skills.
+# HF CLI, agent CLIs, MCP configs, skills.
 #
 #   curl -fsSL https://raw.githubusercontent.com/immanuel-peter/dotfiles/main/setup.sh | bash
 #
@@ -77,6 +77,7 @@ resolve_root() {
 
   if [[ -n "$dir" \
     && -f "$dir/deps/install-apt.sh" \
+    && -f "$dir/deps/install-hf.sh" \
     && -f "$dir/install-node.sh" \
     && -f "$dir/agents/install.sh" \
     && -f "$dir/mcp/install.sh" \
@@ -96,12 +97,12 @@ resolve_root() {
 
   extracted=""
   for candidate in "$tmp"/*; do
-    if [[ -d "$candidate" && -f "$candidate/deps/install-apt.sh" && -f "$candidate/install-node.sh" && -f "$candidate/agents/install.sh" ]]; then
+    if [[ -d "$candidate" && -f "$candidate/deps/install-apt.sh" && -f "$candidate/deps/install-hf.sh" && -f "$candidate/install-node.sh" && -f "$candidate/agents/install.sh" ]]; then
       extracted="$candidate"
       break
     fi
   done
-  [[ -n "$extracted" ]] || die "Archive from ${ARCHIVE_URL} is missing deps/install-apt.sh, install-node.sh, or agents/install.sh"
+  [[ -n "$extracted" ]] || die "Archive from ${ARCHIVE_URL} is missing deps/install-apt.sh, deps/install-hf.sh, install-node.sh, or agents/install.sh"
 
   ROOT="$extracted"
   ok "Fetched repo into ${ROOT}"
@@ -117,7 +118,7 @@ run_installer() {
 
 main() {
   printf '%s\n' "${C_BOLD}Dotfiles setup${C_RESET}"
-  printf '%s\n\n' "${C_DIM}Linux apt packages, Node LTS, agent CLIs, MCP configs, agent skills${C_RESET}"
+  printf '%s\n\n' "${C_DIM}Linux apt packages, HF CLI, Node LTS, agent CLIs, MCP configs, agent skills${C_RESET}"
 
   # Fail before any installer. mcp/install.sh needs both.
   require_cmd python3 "needed to merge Codex MCP config"
@@ -132,6 +133,8 @@ main() {
 
   run_installer "Apt packages" "${ROOT}/deps/install-apt.sh"
   echo
+  run_installer "HF CLI install" "${ROOT}/deps/install-hf.sh"
+  echo
   run_installer "Node install" "${ROOT}/install-node.sh"
   echo
   run_installer "Agents install" "${ROOT}/agents/install.sh"
@@ -142,7 +145,7 @@ main() {
   echo
 
   info "Setup complete"
-  ok "Linux apt packages, Node LTS via nvm, agent CLIs, MCP configs, and agent skills"
+  ok "Linux apt packages, HF CLI, Node LTS via nvm, agent CLIs, MCP configs, and agent skills"
   ok "Open a new shell so nvm's node is on PATH"
 }
 
