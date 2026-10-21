@@ -28,7 +28,7 @@ cd ~/dotfiles
 
 ## Apt — `deps/install-apt.sh`
 
-Installs [cloudflared](https://developers.cloudflare.com/tunnel/downloads/) from Cloudflare's apt repository on Debian and Ubuntu. Other systems skip this step. An existing `cloudflared` on `PATH` is left as it is.
+Installs [cloudflared](https://developers.cloudflare.com/tunnel/downloads/) from Cloudflare's apt repository and the [gh](https://cli.github.com/) from GitHub's apt repository on Debian and Ubuntu. Other systems skip this step. An existing `cloudflared` on `PATH` is left as it is. `gh` is installed or upgraded.
 
 ## Node — `install-node.sh`
 

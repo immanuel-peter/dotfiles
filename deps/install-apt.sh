@@ -1,14 +1,21 @@
 #!/usr/bin/env bash
 # Install apt packages for a Linux machine.
-# Currently cloudflared, from Cloudflare's apt repository:
+# cloudflared, from Cloudflare's apt repository:
 # https://developers.cloudflare.com/tunnel/downloads/
+# gh, from GitHub's apt repository:
+# https://github.com/cli/cli/blob/trunk/docs/install_linux.md
 #
 #   ./deps/install-apt.sh
 #   curl -fsSL https://raw.githubusercontent.com/immanuel-peter/dotfiles/main/deps/install-apt.sh | bash
 #
 # Skips on non-Linux, and on Linux when apt-get is missing. Skips cloudflared
+<<<<<<< HEAD
 # when it is already on PATH. Requires root or passwordless/cached sudo;
 # never prompts for credentials or package configuration.
+=======
+# when it is already on PATH. gh is installed or upgraded from the official
+# repository. sudo is used only for the apt steps.
+>>>>>>> 7fcb27f (chore(apt): install GitHub CLI from official repository)
 set -euo pipefail
 
 if [[ -t 1 ]]; then
@@ -70,9 +77,47 @@ install_cloudflared() {
   ok "cloudflared $(cloudflared_version)"
 }
 
+gh_version() {
+  gh --version 2>/dev/null | awk 'NR==1 { print $3 }'
+}
+
+install_gh() {
+  info "Installing GitHub CLI (sudo)"
+  command -v sudo >/dev/null 2>&1 || die "Need sudo to install gh"
+  command -v dpkg >/dev/null 2>&1 || die "Need dpkg to configure the GitHub CLI apt repository"
+  sudo -v
+
+  sudo DEBIAN_FRONTEND=noninteractive apt-get update
+  sudo DEBIAN_FRONTEND=noninteractive apt-get install -y wget ca-certificates
+
+  if [[ ! -f /etc/apt/sources.list.d/github-cli.list ]]; then
+    info "Adding GitHub CLI apt repository"
+    sudo mkdir -p -m 755 /etc/apt/keyrings
+    sudo mkdir -p -m 755 /etc/apt/sources.list.d
+
+    local tmp_key
+    tmp_key="$(mktemp)"
+    wget -nv -O "$tmp_key" https://cli.github.com/packages/githubcli-archive-keyring.gpg
+    cat "$tmp_key" | sudo tee /etc/apt/keyrings/githubcli-archive-keyring.gpg >/dev/null
+    rm -f "$tmp_key"
+
+    sudo chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" \
+      | sudo tee /etc/apt/sources.list.d/github-cli.list >/dev/null
+  else
+    ok "GitHub CLI apt repository already configured"
+  fi
+
+  sudo DEBIAN_FRONTEND=noninteractive apt-get update
+  sudo DEBIAN_FRONTEND=noninteractive apt-get install -y gh
+
+  command -v gh >/dev/null 2>&1 || die "gh install finished but it is not on PATH"
+  ok "gh $(gh_version)"
+}
+
 main() {
   printf '%s\n' "${C_BOLD}Apt packages${C_RESET}"
-  printf '%s\n\n' "${C_DIM}cloudflared on Debian and Ubuntu${C_RESET}"
+  printf '%s\n\n' "${C_DIM}cloudflared and gh on Debian and Ubuntu${C_RESET}"
 
   if [[ "$(uname -s)" != Linux ]]; then
     ok "Not Linux ($(uname -s)); skipping apt packages"
@@ -80,11 +125,13 @@ main() {
   fi
 
   if ! command -v apt-get >/dev/null 2>&1; then
-    warn "apt-get not found; skipping cloudflared"
+    warn "apt-get not found; skipping apt packages"
     return
   fi
 
   install_cloudflared
+  echo
+  install_gh
   echo
   info "Done"
 }
