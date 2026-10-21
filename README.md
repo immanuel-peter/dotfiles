@@ -8,11 +8,12 @@ On a fresh box, no clone needed:
 curl -fsSL https://raw.githubusercontent.com/immanuel-peter/dotfiles/main/setup.sh | bash
 ```
 
-That installs Linux apt packages, HF CLI, nvm + Node LTS, the agent CLIs, MCP configs, and agent skills. To run one piece:
+That installs Linux apt packages, HF CLI, rclone, nvm + Node LTS, the agent CLIs, MCP configs, and agent skills. To run one piece:
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/immanuel-peter/dotfiles/main/deps/install-apt.sh | bash
 curl -fsSL https://raw.githubusercontent.com/immanuel-peter/dotfiles/main/deps/install-hf.sh | bash
+curl -fsSL https://raw.githubusercontent.com/immanuel-peter/dotfiles/main/deps/install-rclone.sh | bash
 curl -fsSL https://raw.githubusercontent.com/immanuel-peter/dotfiles/main/install-node.sh | bash
 curl -fsSL https://raw.githubusercontent.com/immanuel-peter/dotfiles/main/agents/install.sh | bash
 curl -fsSL https://raw.githubusercontent.com/immanuel-peter/dotfiles/main/mcp/install.sh | bash
@@ -38,6 +39,12 @@ Also installs `python3-venv`, which pulls in venv support for the distro's defau
 Installs [HF CLI](https://huggingface.co/docs/huggingface_hub/en/guides/cli) with the official installer as the current user. Setup runs this after apt dependencies. A working `hf` on `PATH` or in `~/.local/bin` is left as it is. The vendor installer supports macOS and Linux, requires Python 3.10+, and manages the shell's PATH entry for `~/.local/bin`.
 
 For a standalone install on Debian/Ubuntu, run `deps/install-apt.sh` first. The HF installer checks that its selected Python can create a venv, including pip. A custom Python earlier on `PATH` needs its own venv/ensurepip support. Sign in separately with `hf auth login`.
+
+## rclone — `deps/install-rclone.sh`
+
+Installs or updates [rclone](https://rclone.org/) using the [official installer](https://rclone.org/install.sh). Runs as root or uses `sudo -n`, and fails without prompting if passwordless or cached sudo is unavailable. The installer requires `curl` and one of `unzip`, `7z`, or `busybox` on the privileged command's PATH. BSD systems also need `makewhatis`. An already current rclone counts as success.
+
+After installation, creates `~/.config/rclone` and touches `~/.config/rclone/rclone.conf` as the invoking user, preserving existing config contents. Configure remotes separately with `rclone config`.
 
 ## Node — `install-node.sh`
 

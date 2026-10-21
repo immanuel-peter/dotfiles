@@ -95,34 +95,44 @@ gh_version() {
 }
 
 install_gh() {
-  info "Installing GitHub CLI (sudo)"
-  command -v sudo >/dev/null 2>&1 || die "Need sudo to install gh"
+  info "Installing GitHub CLI"
   command -v dpkg >/dev/null 2>&1 || die "Need dpkg to configure the GitHub CLI apt repository"
-  sudo -v
+  local -a elevate=(env)
+  if (( EUID != 0 )); then
+    command -v sudo >/dev/null 2>&1 || die "Need root or sudo to install gh"
+    sudo -n true </dev/null || die "Need passwordless or cached sudo. Run sudo -v separately, then retry."
+    elevate=(sudo -n env)
+  fi
 
-  sudo DEBIAN_FRONTEND=noninteractive apt-get update
-  sudo DEBIAN_FRONTEND=noninteractive apt-get install -y wget ca-certificates
+  "${elevate[@]}" DEBIAN_FRONTEND=noninteractive NEEDRESTART_MODE=a \
+    apt-get update </dev/null
+  "${elevate[@]}" DEBIAN_FRONTEND=noninteractive NEEDRESTART_MODE=a \
+    apt-get install -y -o Dpkg::Options::=--force-confdef \
+      -o Dpkg::Options::=--force-confold wget ca-certificates </dev/null
 
   if [[ ! -f /etc/apt/sources.list.d/github-cli.list ]]; then
     info "Adding GitHub CLI apt repository"
-    sudo mkdir -p -m 755 /etc/apt/keyrings
-    sudo mkdir -p -m 755 /etc/apt/sources.list.d
+    "${elevate[@]}" mkdir -p -m 755 /etc/apt/keyrings
+    "${elevate[@]}" mkdir -p -m 755 /etc/apt/sources.list.d
 
     local tmp_key
     tmp_key="$(mktemp)"
     wget -nv -O "$tmp_key" https://cli.github.com/packages/githubcli-archive-keyring.gpg
-    cat "$tmp_key" | sudo tee /etc/apt/keyrings/githubcli-archive-keyring.gpg >/dev/null
+    cat "$tmp_key" | "${elevate[@]}" tee /etc/apt/keyrings/githubcli-archive-keyring.gpg >/dev/null
     rm -f "$tmp_key"
 
-    sudo chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg
+    "${elevate[@]}" chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg
     echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" \
-      | sudo tee /etc/apt/sources.list.d/github-cli.list >/dev/null
+      | "${elevate[@]}" tee /etc/apt/sources.list.d/github-cli.list >/dev/null
   else
     ok "GitHub CLI apt repository already configured"
   fi
 
-  sudo DEBIAN_FRONTEND=noninteractive apt-get update
-  sudo DEBIAN_FRONTEND=noninteractive apt-get install -y gh
+  "${elevate[@]}" DEBIAN_FRONTEND=noninteractive NEEDRESTART_MODE=a \
+    apt-get update </dev/null
+  "${elevate[@]}" DEBIAN_FRONTEND=noninteractive NEEDRESTART_MODE=a \
+    apt-get install -y -o Dpkg::Options::=--force-confdef \
+      -o Dpkg::Options::=--force-confold gh </dev/null
 
   command -v gh >/dev/null 2>&1 || die "gh install finished but it is not on PATH"
   ok "gh $(gh_version)"
