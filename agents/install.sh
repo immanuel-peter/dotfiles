@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Install Claude Code, Codex, OpenCode, Grok Build, and Muse Code.
+# Install Claude Code, Codex, OpenCode, Grok Build, Muse Code, and T3 Code.
 #
 #   ./agents/install.sh
 #   curl -fsSL https://raw.githubusercontent.com/immanuel-peter/dotfiles/main/agents/install.sh | bash
@@ -14,7 +14,7 @@ RAW_BASE="https://raw.githubusercontent.com/${DOTFILES_REPO}/${DOTFILES_REF}/age
 
 ROOT=""
 CLEANUP_DIR=""
-INSTALLERS=(install-claude.sh install-codex.sh install-opencode.sh install-grok.sh install-muse.sh)
+INSTALLERS=(install-claude.sh install-codex.sh install-opencode.sh install-grok.sh install-muse.sh install-t3.sh)
 
 cleanup() {
   if [[ -n "$CLEANUP_DIR" && -d "$CLEANUP_DIR" ]]; then
@@ -24,7 +24,7 @@ cleanup() {
 trap cleanup EXIT
 
 # A piped script has no BASH_SOURCE path or sibling installers. Download all
-# five before running any of them, and keep children away from the script's stdin.
+# of them before running any, and keep children away from the script's stdin.
 resolve_root() {
   local src="${BASH_SOURCE[0]:-}"
   local dir="" script
@@ -75,3 +75,4 @@ run "Codex" "${ROOT}/install-codex.sh"
 run "OpenCode" "${ROOT}/install-opencode.sh"
 run "Grok Build" "${ROOT}/install-grok.sh"
 run "Muse Code" "${ROOT}/install-muse.sh"
+run "T3 Code" "${ROOT}/install-t3.sh"

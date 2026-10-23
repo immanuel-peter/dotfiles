@@ -34,6 +34,8 @@ Installs [cloudflared](https://developers.cloudflare.com/tunnel/downloads/) from
 
 Also installs `python3-venv`, which pulls in venv support for the distro's default Python, including `python3.10-venv` on Ubuntu 22.04 and `python3.12-venv` on Ubuntu 24.04.
 
+Also installs `libatomic1` when it is missing. The T3 Code CLI needs `libatomic.so.1` from that package.
+
 ## Hugging Face CLI — `deps/install-hf.sh`
 
 Installs [HF CLI](https://huggingface.co/docs/huggingface_hub/en/guides/cli) with the official installer as the current user. Setup runs this after apt dependencies. A working `hf` on `PATH` or in `~/.local/bin` is left as it is. The vendor installer supports macOS and Linux, requires Python 3.10+, and manages the shell's PATH entry for `~/.local/bin`.
@@ -59,6 +61,7 @@ Installs agent CLIs. Sign-in stays outside the scripts.
 - OpenCode
 - Grok Build
 - Muse Code
+- T3 Code (nightly)
 
 ## MCP - `mcp/`
 

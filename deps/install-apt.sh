@@ -10,7 +10,8 @@
 #
 # Skips on non-Linux, and on Linux when apt-get is missing. Skips cloudflared
 # when it is already on PATH. gh is installed or upgraded from the official
-# repository. Also installs venv support for the distro's default Python.
+# repository. Also installs venv support for the distro's default Python, and
+# libatomic1 when the T3 Code CLI's libatomic.so.1 is missing.
 # sudo is used only for the apt steps.
 set -euo pipefail
 
@@ -38,6 +39,37 @@ die() {
 
 cloudflared_version() {
   cloudflared --version 2>/dev/null | awk 'NR==1 { print $3 }'
+}
+
+libatomic_installed() {
+  local status
+  status="$(dpkg-query -W -f='${Status}' libatomic1 2>/dev/null || true)"
+  [[ "$status" == "install ok installed" ]]
+}
+
+install_libatomic() {
+  info "Checking libatomic1"
+  if libatomic_installed; then
+    ok "libatomic1 already installed"
+    return
+  fi
+
+  info "Installing libatomic1"
+  local -a elevate=()
+  if (( EUID != 0 )); then
+    command -v sudo >/dev/null 2>&1 || die "Need root or sudo to install libatomic1"
+    sudo -n true </dev/null || die "Need passwordless or cached sudo. Run sudo -v separately, then retry."
+    elevate=(sudo -n)
+  fi
+
+  "${elevate[@]}" env DEBIAN_FRONTEND=noninteractive NEEDRESTART_MODE=a \
+    apt-get update </dev/null
+  "${elevate[@]}" env DEBIAN_FRONTEND=noninteractive NEEDRESTART_MODE=a \
+    apt-get install -y -o Dpkg::Options::=--force-confdef \
+      -o Dpkg::Options::=--force-confold libatomic1 </dev/null
+
+  libatomic_installed || die "libatomic1 install finished but the package is not installed"
+  ok "libatomic1 installed"
 }
 
 install_python_venv() {
@@ -140,7 +172,7 @@ install_gh() {
 
 main() {
   printf '%s\n' "${C_BOLD}Apt packages${C_RESET}"
-  printf '%s\n\n' "${C_DIM}Python venv support, cloudflared, and gh on Debian and Ubuntu${C_RESET}"
+  printf '%s\n\n' "${C_DIM}Python venv support, libatomic1, cloudflared, and gh on Debian and Ubuntu${C_RESET}"
 
   if [[ "$(uname -s)" != Linux ]]; then
     ok "Not Linux ($(uname -s)); skipping apt packages"
@@ -153,6 +185,8 @@ main() {
   fi
 
   install_python_venv
+  echo
+  install_libatomic
   echo
   install_cloudflared
   echo
