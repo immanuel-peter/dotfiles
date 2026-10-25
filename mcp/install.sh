@@ -176,7 +176,7 @@ ensure_agent_browser() {
   else
     if ! command -v npm >/dev/null 2>&1; then
       warn "agent-browser not on PATH and npm is missing"
-      warn "Install Node first: curl -fsSL https://raw.githubusercontent.com/${DOTFILES_REPO}/${DOTFILES_REF}/install-node.sh | bash"
+      warn "Install Node first: curl -fsSL https://raw.githubusercontent.com/${DOTFILES_REPO}/${DOTFILES_REF}/deps/install-node.sh | bash"
       return 0
     fi
 
@@ -251,7 +251,7 @@ ensure_xurl() {
   else
     if ! command -v npm >/dev/null 2>&1; then
       warn "xurl not on PATH and npm is missing"
-      warn "Install Node first: curl -fsSL https://raw.githubusercontent.com/${DOTFILES_REPO}/${DOTFILES_REF}/install-node.sh | bash"
+      warn "Install Node first: curl -fsSL https://raw.githubusercontent.com/${DOTFILES_REPO}/${DOTFILES_REF}/deps/install-node.sh | bash"
       return 0
     fi
 

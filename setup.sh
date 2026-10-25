@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Bootstrap a machine for coding agents: Linux apt packages, nvm + Node LTS,
-# HF CLI, rclone, agent CLIs, MCP configs, skills.
+# Bootstrap a machine for coding agents: git identity, Linux apt packages,
+# nvm + Node LTS, HF CLI, rclone, agent CLIs, MCP configs, skills.
 #
 #   curl -fsSL https://raw.githubusercontent.com/immanuel-peter/dotfiles/main/setup.sh | bash
 #
@@ -66,6 +66,23 @@ require_cmd() {
   command -v "$1" >/dev/null 2>&1 || die "Missing required command: $1 ($2)"
 }
 
+set_git_global_if_unset() {
+  local key="$1"
+  local value="$2"
+  if git config --global --get "$key" >/dev/null 2>&1; then
+    ok "${key} already set"
+    return
+  fi
+  git config --global "$key" "$value"
+  ok "${key} set to ${value}"
+}
+
+configure_git_identity() {
+  info "Git identity"
+  set_git_global_if_unset user.name "immanuel-peter"
+  set_git_global_if_unset user.email "immanuel.peter1@gmail.com"
+}
+
 # Checkout next to this script, or a fetched tarball of DOTFILES_REPO@DOTFILES_REF.
 # `curl …/setup.sh | bash` has no script path, so that path always fetches.
 resolve_root() {
@@ -79,7 +96,7 @@ resolve_root() {
     && -f "$dir/deps/install-apt.sh" \
     && -f "$dir/deps/install-hf.sh" \
     && -f "$dir/deps/install-rclone.sh" \
-    && -f "$dir/install-node.sh" \
+    && -f "$dir/deps/install-node.sh" \
     && -f "$dir/agents/install.sh" \
     && -f "$dir/mcp/install.sh" \
     && -f "$dir/skills/install.sh" ]]; then
@@ -98,12 +115,12 @@ resolve_root() {
 
   extracted=""
   for candidate in "$tmp"/*; do
-    if [[ -d "$candidate" && -f "$candidate/deps/install-apt.sh" && -f "$candidate/deps/install-hf.sh" && -f "$candidate/deps/install-rclone.sh" && -f "$candidate/install-node.sh" && -f "$candidate/agents/install.sh" ]]; then
+    if [[ -d "$candidate" && -f "$candidate/deps/install-apt.sh" && -f "$candidate/deps/install-hf.sh" && -f "$candidate/deps/install-rclone.sh" && -f "$candidate/deps/install-node.sh" && -f "$candidate/agents/install.sh" ]]; then
       extracted="$candidate"
       break
     fi
   done
-  [[ -n "$extracted" ]] || die "Archive from ${ARCHIVE_URL} is missing deps/install-apt.sh, deps/install-hf.sh, deps/install-rclone.sh, install-node.sh, or agents/install.sh"
+  [[ -n "$extracted" ]] || die "Archive from ${ARCHIVE_URL} is missing deps/install-apt.sh, deps/install-hf.sh, deps/install-rclone.sh, deps/install-node.sh, or agents/install.sh"
 
   ROOT="$extracted"
   ok "Fetched repo into ${ROOT}"
@@ -119,11 +136,12 @@ run_installer() {
 
 main() {
   printf '%s\n' "${C_BOLD}Dotfiles setup${C_RESET}"
-  printf '%s\n\n' "${C_DIM}Linux apt packages, HF CLI, rclone, Node LTS, agent CLIs, MCP configs, agent skills${C_RESET}"
+  printf '%s\n\n' "${C_DIM}Git identity, Linux apt packages, HF CLI, rclone, Node LTS, agent CLIs, MCP configs, agent skills${C_RESET}"
 
-  # Fail before any installer. mcp/install.sh needs both.
+  # Fail before any installer. mcp/install.sh needs python3 and jq.
   require_cmd python3 "needed to merge Codex MCP config"
   require_cmd jq "needed to merge Claude MCP config"
+  require_cmd git "needed to set user.name and user.email"
 
   resolve_root
   if [[ -z "$CLEANUP_DIR" ]]; then
@@ -132,13 +150,15 @@ main() {
     printf '%s\n\n' "${C_DIM}source: ${DOTFILES_REPO}@${DOTFILES_REF}${C_RESET}"
   fi
 
+  configure_git_identity
+  echo
   run_installer "Apt packages" "${ROOT}/deps/install-apt.sh"
   echo
   run_installer "HF CLI install" "${ROOT}/deps/install-hf.sh"
   echo
   run_installer "rclone install" "${ROOT}/deps/install-rclone.sh"
   echo
-  run_installer "Node install" "${ROOT}/install-node.sh"
+  run_installer "Node install" "${ROOT}/deps/install-node.sh"
   echo
   run_installer "Agents install" "${ROOT}/agents/install.sh"
   echo
@@ -148,7 +168,7 @@ main() {
   echo
 
   info "Setup complete"
-  ok "Linux apt packages, HF CLI, rclone, Node LTS via nvm, agent CLIs, MCP configs, and agent skills"
+  ok "Git identity, Linux apt packages, HF CLI, rclone, Node LTS via nvm, agent CLIs, MCP configs, and agent skills"
   ok "Open a new shell so nvm's node is on PATH"
 }
 

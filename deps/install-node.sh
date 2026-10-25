@@ -3,7 +3,7 @@
 #
 # Does not install MCP configs — run mcp/install.sh after this.
 #
-#   curl -fsSL https://raw.githubusercontent.com/immanuel-peter/dotfiles/main/install-node.sh | bash
+#   curl -fsSL https://raw.githubusercontent.com/immanuel-peter/dotfiles/main/deps/install-node.sh | bash
 #
 # Override the GitHub source with DOTFILES_REPO / DOTFILES_REF if needed.
 set -euo pipefail
@@ -120,7 +120,7 @@ main() {
   local sibling=""
   local src="${BASH_SOURCE[0]:-}"
   if [[ -n "$src" && -f "$src" ]]; then
-    sibling="$(cd "$(dirname "$src")" && pwd)/mcp/install.sh"
+    sibling="$(cd "$(dirname "$src")/.." && pwd)/mcp/install.sh"
   fi
   if [[ -n "$sibling" && -f "$sibling" ]]; then
     ok "Then install MCP configs:  $sibling"

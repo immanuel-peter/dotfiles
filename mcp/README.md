@@ -47,7 +47,7 @@ Shared MCP server configs for coding agents.
 No clone needed:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/immanuel-peter/dotfiles/main/install-node.sh | bash
+curl -fsSL https://raw.githubusercontent.com/immanuel-peter/dotfiles/main/deps/install-node.sh | bash
 curl -fsSL https://raw.githubusercontent.com/immanuel-peter/dotfiles/main/mcp/install.sh | bash
 ```
 
@@ -56,8 +56,8 @@ Or from a checkout:
 ```bash
 git clone https://github.com/immanuel-peter/dotfiles ~/dotfiles
 cd ~/dotfiles
-chmod +x install-node.sh mcp/install.sh
-./install-node.sh    # nvm + Node LTS, if needed
+chmod +x deps/install-node.sh mcp/install.sh
+./deps/install-node.sh    # nvm + Node LTS, if needed
 cd mcp && ./install.sh
 ```
 

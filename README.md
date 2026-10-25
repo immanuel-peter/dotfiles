@@ -8,13 +8,13 @@ On a fresh box, no clone needed:
 curl -fsSL https://raw.githubusercontent.com/immanuel-peter/dotfiles/main/setup.sh | bash
 ```
 
-That installs Linux apt packages, HF CLI, rclone, nvm + Node LTS, the agent CLIs, MCP configs, and agent skills. To run one piece:
+That sets git `user.name` and `user.email` when those global keys are unset, then installs Linux apt packages, HF CLI, rclone, nvm + Node LTS, the agent CLIs, MCP configs, and agent skills. To run one piece:
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/immanuel-peter/dotfiles/main/deps/install-apt.sh | bash
 curl -fsSL https://raw.githubusercontent.com/immanuel-peter/dotfiles/main/deps/install-hf.sh | bash
 curl -fsSL https://raw.githubusercontent.com/immanuel-peter/dotfiles/main/deps/install-rclone.sh | bash
-curl -fsSL https://raw.githubusercontent.com/immanuel-peter/dotfiles/main/install-node.sh | bash
+curl -fsSL https://raw.githubusercontent.com/immanuel-peter/dotfiles/main/deps/install-node.sh | bash
 curl -fsSL https://raw.githubusercontent.com/immanuel-peter/dotfiles/main/agents/install.sh | bash
 curl -fsSL https://raw.githubusercontent.com/immanuel-peter/dotfiles/main/mcp/install.sh | bash
 curl -fsSL https://raw.githubusercontent.com/immanuel-peter/dotfiles/main/skills/install.sh | bash
@@ -48,7 +48,7 @@ Installs or updates [rclone](https://rclone.org/) using the [official installer]
 
 After installation, creates `~/.config/rclone` and touches `~/.config/rclone/rclone.conf` as the invoking user, preserving existing config contents. Configure remotes separately with `rclone config`.
 
-## Node — `install-node.sh`
+## Node — `deps/install-node.sh`
 
 Installs [nvm](https://github.com/nvm-sh/nvm) into `~/.nvm` if it is missing, then `nvm install --lts` and sets that as the default. Uses an existing nvm when already present.
 
