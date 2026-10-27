@@ -32,6 +32,8 @@ cd ~/dotfiles
 
 Installs [cloudflared](https://developers.cloudflare.com/tunnel/downloads/) from Cloudflare's apt repository and the [gh](https://cli.github.com/) from GitHub's apt repository on Debian and Ubuntu. Other systems skip this step. An existing `cloudflared` on `PATH` is left as it is. `gh` is installed or upgraded.
 
+Also installs `bat`, `fd-find`, `ripgrep` (`rg`), and `micro` from the distro's apt repositories. If the distro names the executables `batcat` or `fdfind`, the installer creates `bat` or `fd` links in `~/.local/bin` when those commands are missing. Existing commands and files are left untouched; `~/.local/bin` must be on `PATH` to use the links.
+
 Also installs `python3-venv`, which pulls in venv support for the distro's default Python, including `python3.10-venv` on Ubuntu 22.04 and `python3.12-venv` on Ubuntu 24.04.
 
 Also installs `libatomic1` when it is missing. The T3 Code CLI needs `libatomic.so.1` from that package.
