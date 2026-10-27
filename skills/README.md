@@ -6,6 +6,7 @@ Shared agent skills. Installed into `~/.agents/skills` (the copy other clients r
 
 - [asset-upload](./asset-upload/SKILL.md) — upload a file to PostPlan, get a public URL
 - [bro](./bro/SKILL.md) — restate the last message in plain language, no jargon
+- [file-pr](./file-pr/SKILL.md) — file a concise pull request
 - [frontend-design](./frontend-design/SKILL.md) — distinctive production-grade frontend interfaces
 - [gh](./gh/SKILL.md) — GitHub CLI patterns for agents (`gh`)
 - [html-communication](./html-communication/SKILL.md) — self-contained HTML drafts, published to PostPlan

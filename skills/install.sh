@@ -15,6 +15,7 @@ ARCHIVE_URL="https://github.com/${DOTFILES_REPO}/archive/${DOTFILES_REF}.tar.gz"
 SKILLS=(
   asset-upload
   bro
+  file-pr
   frontend-design
   gh
   html-communication
