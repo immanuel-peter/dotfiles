@@ -19,6 +19,7 @@ SKILLS=(
   frontend-design
   gh
   html-communication
+  no-comments
   unslop
   wait-what
   xurl

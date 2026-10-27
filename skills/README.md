@@ -10,6 +10,7 @@ Shared agent skills. Installed into `~/.agents/skills` (the copy other clients r
 - [frontend-design](./frontend-design/SKILL.md) — distinctive production-grade frontend interfaces
 - [gh](./gh/SKILL.md) — GitHub CLI patterns for agents (`gh`)
 - [html-communication](./html-communication/SKILL.md) — self-contained HTML drafts, published to PostPlan
+- [no-comments](./no-comments/SKILL.md) — remove unnecessary comments and fix the code problems they explain
 - [unslop](./unslop/SKILL.md) — cut AI tells from writing
 - [wait-what](./wait-what/SKILL.md) — re-pitch the last message with the missing context, in plain English
 - [xurl](./xurl/SKILL.md) — X API CLI: posts, search, DMs, media, XChat (`xurl` binary)
