@@ -10,8 +10,8 @@
 #
 # Skips on non-Linux, and on Linux when apt-get is missing. Skips cloudflared
 # when it is already on PATH. gh is installed or upgraded from the official
-# repository. Also installs venv support for the distro's default Python, and
-# libatomic1 when the T3 Code CLI's libatomic.so.1 is missing.
+# repository. Also installs terminal tools, venv support for the distro's
+# default Python, and libatomic1 when the T3 Code CLI's libatomic.so.1 is missing.
 # sudo is used only for the apt steps.
 set -euo pipefail
 
@@ -87,6 +87,44 @@ install_python_venv() {
     apt-get install -y -o Dpkg::Options::=--force-confdef \
       -o Dpkg::Options::=--force-confold python3-venv </dev/null
   ok "Python venv support installed"
+}
+
+link_tool() {
+  local name="$1" fallback="$2" target
+  if command -v "$name" >/dev/null 2>&1; then
+    return
+  fi
+  target="$(command -v "$fallback" || true)"
+  [[ -n "$target" ]] || die "Neither $name nor $fallback is on PATH after installation"
+  if [[ -e "$HOME/.local/bin/$name" || -L "$HOME/.local/bin/$name" ]]; then
+    warn "$HOME/.local/bin/$name already exists; leaving it unchanged"
+    return
+  fi
+  mkdir -p "$HOME/.local/bin"
+  ln -s "$target" "$HOME/.local/bin/$name"
+  if ! command -v "$name" >/dev/null 2>&1; then
+    warn "Add $HOME/.local/bin to PATH to use $name"
+  fi
+}
+
+install_terminal_tools() {
+  info "Installing terminal tools"
+  local -a elevate=(env)
+  if (( EUID != 0 )); then
+    command -v sudo >/dev/null 2>&1 || die "Need root or sudo to install terminal tools"
+    sudo -n true </dev/null || die "Need passwordless or cached sudo. Run sudo -v separately, then retry."
+    elevate=(sudo -n env)
+  fi
+
+  "${elevate[@]}" DEBIAN_FRONTEND=noninteractive NEEDRESTART_MODE=a \
+    apt-get update </dev/null
+  "${elevate[@]}" DEBIAN_FRONTEND=noninteractive NEEDRESTART_MODE=a \
+    apt-get install -y -o Dpkg::Options::=--force-confdef \
+      -o Dpkg::Options::=--force-confold bat fd-find ripgrep micro </dev/null
+
+  link_tool bat batcat
+  link_tool fd fdfind
+  ok "Terminal tools installed"
 }
 
 install_cloudflared() {
@@ -172,7 +210,7 @@ install_gh() {
 
 main() {
   printf '%s\n' "${C_BOLD}Apt packages${C_RESET}"
-  printf '%s\n\n' "${C_DIM}Python venv support, libatomic1, cloudflared, and gh on Debian and Ubuntu${C_RESET}"
+  printf '%s\n\n' "${C_DIM}Terminal tools, Python venv support, libatomic1, cloudflared, and gh on Debian and Ubuntu${C_RESET}"
 
   if [[ "$(uname -s)" != Linux ]]; then
     ok "Not Linux ($(uname -s)); skipping apt packages"
@@ -184,6 +222,8 @@ main() {
     return
   fi
 
+  install_terminal_tools
+  echo
   install_python_venv
   echo
   install_libatomic
