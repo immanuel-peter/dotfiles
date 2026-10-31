@@ -105,6 +105,7 @@ Installed into `~/.agents/skills` and symlinked into `~/.claude/skills`.
 - gh
 - html-communication
 - no-comments
+- technical-writing
 - unslop
 - wait-what
 - xurl

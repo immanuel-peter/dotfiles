@@ -20,6 +20,7 @@ SKILLS=(
   gh
   html-communication
   no-comments
+  technical-writing
   unslop
   wait-what
   xurl
