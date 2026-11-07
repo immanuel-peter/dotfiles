@@ -9,6 +9,7 @@ Shared agent skills. Installed into `~/.agents/skills` (the copy other clients r
 - [file-pr](./file-pr/SKILL.md) — file a concise pull request
 - [frontend-design](./frontend-design/SKILL.md) — distinctive production-grade frontend interfaces
 - [gh](./gh/SKILL.md) — GitHub CLI patterns for agents (`gh`)
+- [gh-stack](./gh-stack/SKILL.md) — stacked PRs and splitting work into reviewable branches (`gh stack`)
 - [html-communication](./html-communication/SKILL.md) — self-contained HTML drafts, published to PostPlan
 - [no-comments](./no-comments/SKILL.md) — remove unnecessary comments and fix the code problems they explain
 - [technical-writing](./technical-writing/SKILL.md) — write and review docs, RFCs, READMEs, PR descriptions, and commit messages

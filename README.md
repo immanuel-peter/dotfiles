@@ -103,6 +103,7 @@ Installed into `~/.agents/skills` and symlinked into `~/.claude/skills`.
 - bro
 - frontend-design
 - gh
+- gh-stack
 - html-communication
 - no-comments
 - technical-writing

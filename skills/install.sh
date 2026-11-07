@@ -18,6 +18,7 @@ SKILLS=(
   file-pr
   frontend-design
   gh
+  gh-stack
   html-communication
   no-comments
   technical-writing
