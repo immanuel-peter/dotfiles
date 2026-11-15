@@ -19,10 +19,11 @@ SKILLS=(
   frontend-design
   gh
   gh-stack
-  html-communication
   no-comments
+  style-report
   technical-writing
   unslop
+  upload-postplan
   wait-what
   xurl
 )
@@ -158,10 +159,10 @@ install_skill() {
 check_postplan_token() {
   info "Checking skill-related environment variables"
   if [[ -n "${POSTPLAN_TOKEN:-}" ]]; then
-    ok "set: POSTPLAN_TOKEN (asset-upload, html-communication)"
+    ok "set: POSTPLAN_TOKEN (asset-upload, upload-postplan)"
   else
-    warn "missing: POSTPLAN_TOKEN (asset-upload, html-communication)"
-    printf '%s\n' "${C_DIM}asset-upload and html-communication will refuse until this is set, e.g.:${C_RESET}"
+    warn "missing: POSTPLAN_TOKEN (asset-upload, upload-postplan)"
+    printf '%s\n' "${C_DIM}asset-upload and upload-postplan will refuse until this is set, e.g.:${C_RESET}"
     printf '  export POSTPLAN_TOKEN="…"\n'
   fi
 }

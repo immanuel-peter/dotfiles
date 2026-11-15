@@ -10,10 +10,11 @@ Shared agent skills. Installed into `~/.agents/skills` (the copy other clients r
 - [frontend-design](./frontend-design/SKILL.md) — distinctive production-grade frontend interfaces
 - [gh](./gh/SKILL.md) — GitHub CLI patterns for agents (`gh`)
 - [gh-stack](./gh-stack/SKILL.md) — stacked PRs and splitting work into reviewable branches (`gh stack`)
-- [html-communication](./html-communication/SKILL.md) — self-contained HTML drafts, published to PostPlan
 - [no-comments](./no-comments/SKILL.md) — remove unnecessary comments and fix the code problems they explain
+- [style-report](./style-report/SKILL.md) — styled self-contained HTML report, ready for upload
 - [technical-writing](./technical-writing/SKILL.md) — write and review docs, RFCs, READMEs, PR descriptions, and commit messages
 - [unslop](./unslop/SKILL.md) — cut AI tells from writing
+- [upload-postplan](./upload-postplan/SKILL.md) — publish an HTML file as a PostPlan Draft or new Version
 - [wait-what](./wait-what/SKILL.md) — re-pitch the last message with the missing context, in plain English
 - [xurl](./xurl/SKILL.md) — X API CLI: posts, search, DMs, media, XChat (`xurl` binary)
 
@@ -21,7 +22,7 @@ Shared agent skills. Installed into `~/.agents/skills` (the copy other clients r
 
 | Variable | Skill |
 | --- | --- |
-| `POSTPLAN_TOKEN` | asset-upload, html-communication |
+| `POSTPLAN_TOKEN` | asset-upload, upload-postplan |
 
 ## Installation
 
