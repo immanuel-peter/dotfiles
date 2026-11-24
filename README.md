@@ -18,6 +18,7 @@ curl -fsSL https://raw.githubusercontent.com/immanuel-peter/dotfiles/main/deps/i
 curl -fsSL https://raw.githubusercontent.com/immanuel-peter/dotfiles/main/agents/install.sh | bash
 curl -fsSL https://raw.githubusercontent.com/immanuel-peter/dotfiles/main/mcp/install.sh | bash
 curl -fsSL https://raw.githubusercontent.com/immanuel-peter/dotfiles/main/skills/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/immanuel-peter/dotfiles/main/machine-info.sh | bash
 ```
 
 Or from a checkout:
@@ -111,3 +112,7 @@ Installed into `~/.agents/skills` and symlinked into `~/.claude/skills`.
 - upload-postplan
 - wait-what
 - xurl
+
+## Machine info — `machine-info.sh`
+
+Prints OS, CPU count, architecture, RAM, root disk size, and NVIDIA GPU info (count, model, and VRAM per GPU when `nvidia-smi` is available). Runs automatically at the end of `setup.sh` and supports Linux and macOS.

@@ -99,7 +99,8 @@ resolve_root() {
     && -f "$dir/deps/install-node.sh" \
     && -f "$dir/agents/install.sh" \
     && -f "$dir/mcp/install.sh" \
-    && -f "$dir/skills/install.sh" ]]; then
+    && -f "$dir/skills/install.sh" \
+    && -f "$dir/machine-info.sh" ]]; then
     ROOT="$dir"
     return
   fi
@@ -170,6 +171,9 @@ main() {
   info "Setup complete"
   ok "Git identity, Linux apt packages, HF CLI, rclone, Node LTS via nvm, agent CLIs, MCP configs, and agent skills"
   ok "Open a new shell so nvm's node is on PATH"
+  echo
+  info "Machine info"
+  bash "${ROOT}/machine-info.sh" </dev/null || warn "Machine info failed"
 }
 
 main "$@"
